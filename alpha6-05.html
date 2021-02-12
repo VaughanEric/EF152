@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252"><meta name="viewport" content="width=device-width"><title>https://fws.us.to:1187/data/alpha6-05.html</title><link rel="stylesheet" type="text/css" href="resource://content-accessible/viewsource.css"></head><body id="viewsource" class="highlight" style="-moz-tab-size: 4" contextmenu="actions"><pre id="line1"><span></span><span class="doctype">&lt;!DOCTYPE html&gt;</span><span>
+<span id="line2"></span></span><span>&lt;<span class="start-tag">html</span>&gt;</span><span>
+<span id="line3"></span>    </span><span>&lt;<span class="start-tag">head</span>&gt;</span><span>
+<span id="line4"></span>        </span><span>&lt;<span class="start-tag">style</span>&gt;</span><span>
+<span id="line5"></span>            span {
+<span id="line6"></span>                font-family: 'Courier New', Courier, monospace;
+<span id="line7"></span>            }
+<span id="line8"></span>        </span><span>&lt;/<span class="end-tag">style</span>&gt;</span><span>
+<span id="line9"></span>    </span><span>&lt;/<span class="end-tag">head</span>&gt;</span><span>
+<span id="line10"></span>    </span><span>&lt;<span class="start-tag">body</span>&gt;</span><span>
+<span id="line11"></span>        </span><span>&lt;<span class="start-tag">h3</span>&gt;</span><span>Rooftop Rocket by Dean</span><span>&lt;/<span class="end-tag">h3</span>&gt;</span><span>
+<span id="line12"></span>        </span><span>&lt;<span class="start-tag">i</span>&gt;</span><span>Use arrow keys. Land on buildings to get fuel and score.</span><span>&lt;/<span class="end-tag">i</span>&gt;</span><span>
+<span id="line13"></span>        </span><span>&lt;<span class="start-tag">div</span>&gt;</span><span>
+<span id="line14"></span>            Pillar loc: </span><span>&lt;<span class="start-tag">span</span> <span class="attribute-name">id</span>="<a class="attribute-value">ploc</a>"&gt;</span><span>0000</span><span>&lt;/<span class="end-tag">span</span>&gt;</span><span></span><span>&lt;<span class="start-tag">br</span>&gt;</span><span>
+<span id="line15"></span>            X pos: </span><span>&lt;<span class="start-tag">span</span> <span class="attribute-name">id</span>="<a class="attribute-value">x_pos</a>"&gt;</span><span>X</span><span>&lt;/<span class="end-tag">span</span>&gt;</span><span> Y pos: </span><span>&lt;<span class="start-tag">span</span> <span class="attribute-name">id</span>="<a class="attribute-value">y_pos</a>"&gt;</span><span>Y</span><span>&lt;/<span class="end-tag">span</span>&gt;</span><span> </span><span>&lt;<span class="start-tag">br</span>&gt;</span><span>
+<span id="line16"></span>            X dist to next pillar: </span><span>&lt;<span class="start-tag">span</span> <span class="attribute-name">id</span>="<a class="attribute-value">x_next_pillar</a>"&gt;</span><span>X</span><span>&lt;/<span class="end-tag">span</span>&gt;</span><span> </span><span>&lt;<span class="start-tag">br</span>&gt;</span><span>
+<span id="line17"></span>            Y dist to next pillar: </span><span>&lt;<span class="start-tag">span</span> <span class="attribute-name">id</span>="<a class="attribute-value">y_next_pillar</a>"&gt;</span><span>Y</span><span>&lt;/<span class="end-tag">span</span>&gt;</span><span> </span><span>&lt;<span class="start-tag">br</span>&gt;</span><span>
+<span id="line18"></span>            Fuel Remaining: </span><span>&lt;<span class="start-tag">span</span> <span class="attribute-name">id</span>="<a class="attribute-value">fuel</a>"&gt;</span><span>0000</span><span>&lt;/<span class="end-tag">span</span>&gt;</span><span> </span><span>&lt;<span class="start-tag">br</span>&gt;</span><span>
+<span id="line19"></span>            Score: </span><span>&lt;<span class="start-tag">span</span> <span class="attribute-name">id</span>="<a class="attribute-value">score</a>"&gt;</span><span>0000</span><span>&lt;/<span class="end-tag">span</span>&gt;</span><span> </span><span>&lt;<span class="start-tag">br</span>&gt;</span><span>
+<span id="line20"></span>            </span><span>&lt;<span class="start-tag">input</span> <span class="attribute-name">type</span>="<a class="attribute-value">text</a>" <span class="attribute-name">placeholder</span>="<a class="attribute-value">vel</a>" <span class="attribute-name">id</span>="<a class="attribute-value">input_vel</a>" <span class="attribute-name">value</span>="<a class="attribute-value">0</a>"&gt;</span><span>
+<span id="line21"></span>            </span><span>&lt;<span class="start-tag">input</span> <span class="attribute-name">type</span>="<a class="attribute-value">text</a>" <span class="attribute-name">placeholder</span>="<a class="attribute-value">angle (deg)</a>" <span class="attribute-name">id</span>="<a class="attribute-value">vel_angle</a>" <span class="attribute-name">value</span>="<a class="attribute-value">0</a>"&gt;</span><span>
+<span id="line22"></span>            </span><span>&lt;<span class="start-tag">button</span> <span class="attribute-name">onclick</span>="<a class="attribute-value">velInput()</a>"&gt;</span><span>Submit velocity info</span><span>&lt;/<span class="end-tag">button</span>&gt;</span><span>
+<span id="line23"></span>        </span><span>&lt;/<span class="end-tag">div</span>&gt;</span><span>
+<span id="line24"></span>        </span><span>&lt;<span class="start-tag">canvas</span> <span class="attribute-name">id</span>="<a class="attribute-value">cv</a>" <span class="attribute-name">width</span>="<a class="attribute-value">1280</a>" <span class="attribute-name">height</span>="<a class="attribute-value">720</a>" <span class="attribute-name">style</span>="<a class="attribute-value">border:2px solid gray;</a>"&gt;</span><span></span><span>&lt;/<span class="end-tag">canvas</span>&gt;</span><span>
+<span id="line25"></span>        </span><span>&lt;<span class="start-tag">script</span> <span class="attribute-name">src</span>="<a class="attribute-value" href="view-source:https://fws.us.to:1187/data/matter.min.js">matter.min.js</a>" <span class="attribute-name">type</span>="<a class="attribute-value">text/javascript</a>"&gt;</span><span></span><span>&lt;/<span class="end-tag">script</span>&gt;</span><span>
+<span id="line26"></span>        </span><span>&lt;<span class="start-tag">script</span>&gt;</span><span>
+<span id="line27"></span>            // Initialization
+<span id="line28"></span>            var score = 0;
+<span id="line29"></span>            // Key Controls
+<span id="line30"></span>            const keys = [];
+<span id="line31"></span>            document.body.addEventListener("keyup", function(e) {
+<span id="line32"></span>                keys[e.keyCode] = false;
+<span id="line33"></span>            });
+<span id="line34"></span>            document.body.addEventListener("keydown", function(e) {
+<span id="line35"></span>                keys[e.keyCode] = true;
+<span id="line36"></span>            });
+<span id="line37"></span>            var delta = 1 / 60 // Time step between engine updates in ms
+<span id="line38"></span>            // Module Aliases
+<span id="line39"></span>            var Engine = Matter.Engine,
+<span id="line40"></span>                Render = Matter.Render,
+<span id="line41"></span>                World = Matter.World,
+<span id="line42"></span>                Composite = Matter.Composite,
+<span id="line43"></span>                Composites = Matter.Composites,
+<span id="line44"></span>                Body = Matter.Body,
+<span id="line45"></span>                Bounds = Matter.Bounds,
+<span id="line46"></span>                Bodies = Matter.Bodies,
+<span id="line47"></span>                Events = Matter.Events,
+<span id="line48"></span>                MouseConstraint = Matter.MouseConstraint,
+<span id="line49"></span>                mouse = Matter.Mouse,
+<span id="line50"></span>                Vector = Matter.Vector,
+<span id="line51"></span>                Vertices = Matter.Vertices,
+<span id="line52"></span>                mouseConstraint = Matter.MouseConstraint;
+<span id="line53"></span>            // Create engine &amp; render objects
+<span id="line54"></span>            var engine = Engine.create(),
+<span id="line55"></span>                world = engine.world;
+<span id="line56"></span>            var width = 1280,
+<span id="line57"></span>                height = 720;
+<span id="line58"></span>            var render = Render.create({
+<span id="line59"></span>                canvas: cv,
+<span id="line60"></span>                engine: engine,
+<span id="line61"></span>                options: {
+<span id="line62"></span>                    width: width,
+<span id="line63"></span>                    height: height,
+<span id="line64"></span>                    background: 'transparent',
+<span id="line65"></span>                    wireframes: false,
+<span id="line66"></span>                    showAngleIndicator: false,
+<span id="line67"></span>                    showCollisions: true,
+<span id="line68"></span>                    showVelocity: true,
+<span id="line69"></span>                    hasBounds: true,
+<span id="line70"></span>                    background: 'DSCN0457-16x9.jpg'
+<span id="line71"></span>                }
+<span id="line72"></span>            });
+<span id="line73"></span>            engine.world.gravity.y = .98;
+<span id="line74"></span>            // Create bodies
+<span id="line75"></span>            function randomNBias(min, max, bias, influence) {
+<span id="line76"></span>                var rnd = Math.random() * (max - min) + min,   // random in range
+<span id="line77"></span>                mix = Math.random() * influence;           // bias weight
+<span id="line78"></span>                return rnd * (1 - mix) + bias * mix;           // mix full range and bias
+<span id="line79"></span>            }
+<span id="line80"></span>
+<span id="line81"></span>            /*size = 50;
+<span id="line82"></span>            stackCount = -1
+<span id="line83"></span>            preVert = 0;
+<span id="line84"></span>            var platformWidth = randomNBias(80,125,100,0.75);
+<span id="line85"></span>            //var mountainLength = randomNBias(300,600,475,0.85);
+<span id="line86"></span>            var mountainLength = 700;
+<span id="line87"></span>            var platformLoc = randomNBias(0,0.75,0.5,0.25);
+<span id="line88"></span>            var triangleMatrix = Vertices.create([
+<span id="line89"></span>                {x:0,y:0},
+<span id="line90"></span>                //{x:mountainLength*platformLoc,y:-325},
+<span id="line91"></span>                //{x:(mountainLength*platformLoc)+platformWidth,y:-325},
+<span id="line92"></span>                {x:0,y:-325},
+<span id="line93"></span>                {x:mountainLength,y:-325},
+<span id="line94"></span>                {x:mountainLength,y:0}
+<span id="line95"></span>            ]);
+<span id="line96"></span>            console.log(platformLoc);
+<span id="line97"></span>            var terrainBody = Bodies.fromVertices(width*0.65,height*0.9,triangleMatrix,
+<span id="line98"></span>            {
+<span id="line99"></span>                isStatic: true,
+<span id="line100"></span>                render: {fillStyle: 'brown'}
+<span id="line101"></span>            });
+<span id="line102"></span>            var platformLanding = Bodies.rectangle((width*0.65)+mountainLength,height*0.9,
+<span id="line103"></span>            ((mountainLength*platformLoc)+platformWidth)-mountainLength*platformLoc,
+<span id="line104"></span>            65, {
+<span id="line105"></span>                isStatic: true
+<span id="line106"></span>            });*/
+<span id="line107"></span>
+<span id="line108"></span>            /*difficulty = .95
+<span id="line109"></span>            for (i = 0; i </span><span>&lt; </span><span>mountains.length; i++) {
+<span id="line110"></span>                    let tempHeight = randomNBias(100,400,350,1);
+<span id="line111"></span>                    let tempWidth = 100
+<span id="line112"></span>                    mountains[i] = Bodies.trapezoid(2560*(i/24), height+(tempHeight*0.5), 100, tempHeight, 0.9, {
+<span id="line113"></span>                    isStatic: true,
+<span id="line114"></span>                    render: { fillStyle: 'brown' }
+<span id="line115"></span>                });
+<span id="line116"></span>                console.log(randomNBias(10,50,15,1))
+<span id="line117"></span>            }*/
+<span id="line118"></span>            // Landing pillars
+<span id="line119"></span>            var landingsPosData = [
+<span id="line120"></span>                [0,0]
+<span id="line121"></span>            ];
+<span id="line122"></span>            var landingsFuel = []
+<span id="line123"></span>            var landingsAmount = 24
+<span id="line124"></span>            for (var i = 0; i </span><span>&lt; </span><span>landingsAmount; i++) {
+<span id="line125"></span>                landingsFuel[i] = [Math.ceil(randomNBias(5,20,10,0.95))];
+<span id="line126"></span>            }
+<span id="line127"></span>            var landingsStackCount = -1;
+<span id="line128"></span>            var landings = Composites.stack(0, height*0.95, landingsAmount, 1, 0, 0, function(x, y) {
+<span id="line129"></span>                landingsStackCount++;
+<span id="line130"></span>                let landingHeight = randomNBias(200,1200,950,0.75);
+<span id="line131"></span>                if (landingsStackCount == 0) { 
+<span id="line132"></span>                    landingsPosData[landingsStackCount] = [0, landingHeight];
+<span id="line133"></span>                    return Bodies.rectangle(x, y, 50, landingHeight, {
+<span id="line134"></span>                    isStatic: true,
+<span id="line135"></span>                    friction: 1,
+<span id="line136"></span>                    render: {
+<span id="line137"></span>                        fillStyle: 'grey'
+<span id="line138"></span>                    }
+<span id="line139"></span>                    });
+<span id="line140"></span>                 }
+<span id="line141"></span>                 else{
+<span id="line142"></span>                    let x_pos = x + randomNBias(125,600,500,0.75);
+<span id="line143"></span>                    landingsPosData[landingsStackCount] = [x_pos, landingHeight];
+<span id="line144"></span>                    return Bodies.rectangle(x_pos, y, 50, landingHeight, {
+<span id="line145"></span>                    isStatic: true,
+<span id="line146"></span>                    friction: 0.75,
+<span id="line147"></span>                    render: {
+<span id="line148"></span>                        fillStyle: 'grey'
+<span id="line149"></span>                    }
+<span id="line150"></span>                    });
+<span id="line151"></span>                 }
+<span id="line152"></span>            });
+<span id="line153"></span>            // Landing sensors
+<span id="line154"></span>            var active_pillar = -1;
+<span id="line155"></span>            var active = '#f55a3c',
+<span id="line156"></span>                inactive = '#f5d259';
+<span id="line157"></span>            var landingsSensorsStackCount = -1;
+<span id="line158"></span>            Composite.scale(landings,1,-2,{x:width*0.5,y:height*.98});
+<span id="line159"></span>            var landingsSensors = Composites.stack(0, height*0.95, landingsAmount, 1, 100, 0, function(x, y) {
+<span id="line160"></span>                landingsSensorsStackCount++;
+<span id="line161"></span>                if (landingsStackCount == 0) { 
+<span id="line162"></span>                    return Bodies.rectangle(landingsPosData[landingsSensorsStackCount][0]+10, landingsPosData[landingsSensorsStackCount][1], 30, 10, {
+<span id="line163"></span>                    isStatic: true,
+<span id="line164"></span>                    isSensor: true,
+<span id="line165"></span>                    friction: 1,
+<span id="line166"></span>                    render: { strokeStyle: inactive,
+<span id="line167"></span>                                lineWidth: 1,
+<span id="line168"></span>                                fillStyle: 'transparent' }
+<span id="line169"></span>                    });
+<span id="line170"></span>                 }
+<span id="line171"></span>                 else{
+<span id="line172"></span>                    return Bodies.rectangle(landingsPosData[landingsSensorsStackCount][0]+10, landingsPosData[landingsSensorsStackCount][1], 30, 10, {
+<span id="line173"></span>                    isStatic: true,
+<span id="line174"></span>                    isSensor: true,
+<span id="line175"></span>                    friction: 0.75,
+<span id="line176"></span>                    render: { strokeStyle: inactive,
+<span id="line177"></span>                                lineWidth: 1,
+<span id="line178"></span>                                fillStyle: 'transparent'}
+<span id="line179"></span>                      });
+<span id="line180"></span>                 }
+<span id="line181"></span>            });
+<span id="line182"></span>            Composite.scale(landingsSensors,1,-2,{x:width*0.5,y:height*0.34});
+<span id="line183"></span>            var x_ini = landingsPosData[0][0]+20,
+<span id="line184"></span>                y_ini = (-1)*(landingsPosData[0][1]+landingsPosData[0][1]*0.5);
+<span id="line185"></span>            var lander = Bodies.rectangle(x_ini,y_ini,40,190, {
+<span id="line186"></span>                render: {
+<span id="line187"></span>                        fillStyle: 'white'
+<span id="line188"></span>                    },
+<span id="line189"></span>                    density: .0000002
+<span id="line190"></span>            });
+<span id="line191"></span>            var initialBodies = [
+<span id="line192"></span>                ground = Bodies.rectangle(width*1,height*0.4,landingsPosData[15][0]+width*1.5,60, {
+<span id="line193"></span>                    isStatic: true,
+<span id="line194"></span>                    friction: 0.75,
+<span id="line195"></span>                    render: {
+<span id="line196"></span>                        fillStyle: 'transparent'
+<span id="line197"></span>                    }
+<span id="line198"></span>                }
+<span id="line199"></span>                )
+<span id="line200"></span>            ];
+<span id="line201"></span>            /*var mountainTemplate = Vertices.fromPath('100 0 75 50 100 100 25 125 0 50 25 0');
+<span id="line202"></span>            var mountainPath = Bodies.fromVertices(width*0.5, height+300, mountainTemplate, {
+<span id="line203"></span>                render: {
+<span id="line204"></span>                    fillStyle: 'black',
+<span id="line205"></span>                    strokeStyle: 'orange',
+<span id="line206"></span>                    lineWidth: 2
+<span id="line207"></span>                }
+<span id="line208"></span>            });*/
+<span id="line209"></span>
+<span id="line210"></span>            //World.add(world,[terrainBody,platformLanding]);
+<span id="line211"></span>
+<span id="line212"></span>            World.add(world, [ lander, landings, landingsSensors, initialBodies[0] ]);
+<span id="line213"></span>            World.add(world, initialBodies[0]);
+<span id="line214"></span>            Render.run(render);
+<span id="line215"></span>
+<span id="line216"></span>            function velInput() {
+<span id="line217"></span>                var input_vel = document.getElementById("input_vel").value;
+<span id="line218"></span>                var vel_angle = document.getElementById("vel_angle").value;
+<span id="line219"></span>                Body.setVelocity(lander, {x: (input_vel*Math.cos(vel_angle*(Math.PI/180))), y: -(input_vel*Math.sin(vel_angle*(Math.PI/180)))})
+<span id="line220"></span>                console.log('vel data submitted');
+<span id="line221"></span>            }
+<span id="line222"></span>            // Sensor manager
+<span id="line223"></span>            Events.on(engine, 'collisionStart', function(event) {
+<span id="line224"></span>                var pairs = event.pairs;
+<span id="line225"></span>                
+<span id="line226"></span>                for (var i = 0, j = pairs.length; i != j; ++i) {
+<span id="line227"></span>                    var pair = pairs[i];
+<span id="line228"></span>
+<span id="line229"></span>                    for (var k = 0; k </span><span>&lt; </span><span>landingsSensors.bodies.length; k++) {
+<span id="line230"></span>
+<span id="line231"></span>                        if (pair.bodyA === landingsSensors.bodies[k]) {
+<span id="line232"></span>                            landingsSensors.bodies[k].render.strokeStyle = active;
+<span id="line233"></span>                            active_pillar = k;
+<span id="line234"></span>                        } else if (pair.bodyB === landingsSensors.bodies[k]) {
+<span id="line235"></span>                            lander.render.strokeStyle = active;
+<span id="line236"></span>                        }
+<span id="line237"></span>                    }
+<span id="line238"></span>                }
+<span id="line239"></span>            });
+<span id="line240"></span>            Events.on(engine, 'collisionEnd', function(event) {
+<span id="line241"></span>                var pairs = event.pairs;
+<span id="line242"></span>                
+<span id="line243"></span>                for (var i = 0, j = pairs.length; i != j; ++i) {
+<span id="line244"></span>                    var pair = pairs[i];
+<span id="line245"></span>
+<span id="line246"></span>                    for (var k = 0; k </span><span>&lt; </span><span>landingsSensors.bodies.length; k++) {
+<span id="line247"></span>
+<span id="line248"></span>                        if (pair.bodyA === landingsSensors.bodies[k]) {
+<span id="line249"></span>                            landingsSensors.bodies[k].render.strokeStyle = inactive;
+<span id="line250"></span>                            active_pillar = -1;
+<span id="line251"></span>                        } else if (pair.bodyB === landingsSensors.bodies[k]) {
+<span id="line252"></span>                            lander.render.strokeStyle = inactive;
+<span id="line253"></span>                        }
+<span id="line254"></span>                    }
+<span id="line255"></span>                }
+<span id="line256"></span>            });
+<span id="line257"></span>            function distPillar(pillarLoc) {
+<span id="line258"></span>                if (pillarLoc </span><span>&lt; </span><span>0) {return [0,0]}
+<span id="line259"></span>                else if (pillarLoc &gt;= landingsSensors.bodies.length-1) {return [0,0]}
+<span id="line260"></span>                else{
+<span id="line261"></span>                let x_next = landingsPosData[pillarLoc+1][0] - landingsPosData[pillarLoc][0];
+<span id="line262"></span>                let y_next = landingsPosData[pillarLoc+1][1] - landingsPosData[pillarLoc][1];
+<span id="line263"></span>                return [x_next, y_next];
+<span id="line264"></span>                }
+<span id="line265"></span>            }
+<span id="line266"></span>            var timeScaleTarget = 1,
+<span id="line267"></span>            timingCounter = 0;
+<span id="line268"></span>            fuel = 10000;
+<span id="line269"></span>
+<span id="line270"></span>            // Fuel Management
+<span id="line271"></span>            key_down = false;
+<span id="line272"></span>            Events.on(engine, 'afterUpdate', function(event) {
+<span id="line273"></span>                if (key_down || active_pillar &gt; -1) {
+<span id="line274"></span>                // tween the timescale for bullet time slow-mo
+<span id="line275"></span>                engine.timing.timeScale += (timeScaleTarget - engine.timing.timeScale) * 0.05;
+<span id="line276"></span>
+<span id="line277"></span>                timingCounter += 1;
+<span id="line278"></span>                if (key_down) {
+<span id="line279"></span>                    // every 1.5 sec
+<span id="line280"></span>                    if (timingCounter &gt;= 60 * (1/12)) {
+<span id="line281"></span>                        fuel = fuel - 1;
+<span id="line282"></span>                        // reset counter
+<span id="line283"></span>                        timingCounter = 0;
+<span id="line284"></span>                    }
+<span id="line285"></span>                }
+<span id="line286"></span>                else if (active_pillar &gt; -1) {
+<span id="line287"></span>                    addFuel(active_pillar);
+<span id="line288"></span>                }
+<span id="line289"></span>
+<span id="line290"></span>
+<span id="line291"></span>                }
+<span id="line292"></span>                key_down = false;
+<span id="line293"></span>            });
+<span id="line294"></span>            function addFuel(pillarLoc) {
+<span id="line295"></span>                if (((lander.velocity.x </span><span>&lt;=</span><span> 0) &amp; (lander.velocity.y </span><span>&lt;=</span><span> 0)) &amp; landingsFuel[pillarLoc] &gt; 0) {
+<span id="line296"></span>                fuel += landingsFuel[pillarLoc][0];
+<span id="line297"></span>                landingsFuel[pillarLoc] = [ 0 ];
+<span id="line298"></span>                score++;
+<span id="line299"></span>                console.log('adding fuel')
+<span id="line300"></span>            }
+<span id="line301"></span>            }
+<span id="line302"></span>            // Viewport follower
+<span id="line303"></span>            Events.on(engine, 'beforeTick', function() {
+<span id="line304"></span>                var world = engine.world,
+<span id="line305"></span>                    translate;
+<span id="line306"></span>                var viewportCenter = {
+<span id="line307"></span>                    x: (render.options.width * 0.5) + lander.position.x,
+<span id="line308"></span>                    y: (render.options.height * 0.5) + lander.position.y
+<span id="line309"></span>                };
+<span id="line310"></span>                world.bounds.min.x = lander.position.x - width*0.25;
+<span id="line311"></span>                world.bounds.min.y = lander.position.y - height*0.5;
+<span id="line312"></span>                world.bounds.max.x = lander.position.x + width*0.75;
+<span id="line313"></span>                world.bounds.max.y = lander.position.y + height*0.5;
+<span id="line314"></span>                // get vector from lander relative to centre of viewport
+<span id="line315"></span>                var deltaCenter = Vector.sub(lander.position, viewportCenter),
+<span id="line316"></span>                    centreDist = Vector.magnitude(deltaCenter);
+<span id="line317"></span>
+<span id="line318"></span>                // translate the view if lander has moved over 50px from the centre of viewport
+<span id="line319"></span>                if (centreDist &gt; 200) {
+<span id="line320"></span>                    // create a vector to translate the view, allowing the user to control view speed
+<span id="line321"></span>                    var direction = Vector.normalise(deltaCenter),
+<span id="line322"></span>                        speed = Math.min(10, Math.pow(centreDist - 50, 2) * 0.0002);
+<span id="line323"></span>
+<span id="line324"></span>                    translate = Vector.mult(direction, speed);
+<span id="line325"></span>
+<span id="line326"></span>                    // prevent the view moving outside the world/lander bounds
+<span id="line327"></span>                    var correctionRate = 1.5;
+<span id="line328"></span>                    var bufferZone = 50;
+<span id="line329"></span>                    if (render.bounds.min.x + translate.x </span><span>&lt; </span><span>world.bounds.min.x)
+<span id="line330"></span>                    translate.x = world.bounds.min.x - render.bounds.min.x;
+<span id="line331"></span>
+<span id="line332"></span>                    if (render.bounds.max.x + translate.x &gt; world.bounds.max.x)
+<span id="line333"></span>                    translate.x = world.bounds.max.x - render.bounds.max.x;
+<span id="line334"></span>
+<span id="line335"></span>                    if (render.bounds.min.y + translate.y </span><span>&lt; </span><span>world.bounds.min.y)
+<span id="line336"></span>                    translate.y = world.bounds.min.y - render.bounds.min.y;
+<span id="line337"></span>
+<span id="line338"></span>                    if (render.bounds.max.y + translate.y &gt; world.bounds.max.y)
+<span id="line339"></span>                    translate.y = world.bounds.max.y - render.bounds.max.y;
+<span id="line340"></span>
+<span id="line341"></span>                    // move the view
+<span id="line342"></span>                    Bounds.translate(render.bounds, translate);
+<span id="line343"></span>                    /*console.log('MIN X:' + render.bounds.min.x + ' // MAX X:' + render.bounds.max.x);
+<span id="line344"></span>                    console.log('MIN Y:' + render.bounds.min.y + ' // MAX Y:' + render.bounds.max.y);*/
+<span id="line345"></span>
+<span id="line346"></span>
+<span id="line347"></span>                }
+<span id="line348"></span>            });
+<span id="line349"></span>
+<span id="line350"></span>            Engine.run(engine);
+<span id="line351"></span>            (function run() {
+<span id="line352"></span>                if (keys[38]) { // UP
+<span id="line353"></span>                    let F_APPLIED = (-1500 * lander.mass);
+<span id="line354"></span>                    Body.applyForce(lander,lander.position,{x: 0, y: F_APPLIED});
+<span id="line355"></span>                    //console.log('up pess' + F_APPLIED);
+<span id="line356"></span>                    key_down = true;
+<span id="line357"></span>                }
+<span id="line358"></span>                if (keys[40]) { // DOWN
+<span id="line359"></span>                    let F_APPLIED = (1500 * lander.mass);
+<span id="line360"></span>                    Body.applyForce(lander,lander.position,{x: 0, y: F_APPLIED});
+<span id="line361"></span>                    //console.log('up pess' + F_APPLIED);
+<span id="line362"></span>                    key_down = true;
+<span id="line363"></span>
+<span id="line364"></span>                }
+<span id="line365"></span>                if (keys[39]) { // RIGHT
+<span id="line366"></span>                    let F_APPLIED = (500 * lander.mass);
+<span id="line367"></span>                    Body.applyForce(lander,{x: 0, y: lander.position.y},{x: F_APPLIED, y: 0});
+<span id="line368"></span>                    //console.log('up pess' + F_APPLIED);
+<span id="line369"></span>                    key_down = true;
+<span id="line370"></span>
+<span id="line371"></span>                }
+<span id="line372"></span>                if (keys[37]) { // LEFT
+<span id="line373"></span>                    let F_APPLIED = (-500 * lander.mass);
+<span id="line374"></span>                    Body.applyForce(lander,{x: 0, y: lander.position.y},{x: F_APPLIED, y: 0});
+<span id="line375"></span>                    //console.log('up pess' + F_APPLIED);
+<span id="line376"></span>                    key_down = true;
+<span id="line377"></span>
+<span id="line378"></span>                }
+<span id="line379"></span>                //if ((lander.velocity.y &gt; 0.15) &amp; (lander.velocity.y &gt; 0)) {}
+<span id="line380"></span>                Body.setAngle(lander,0); // lock rotation of the lander
+<span id="line381"></span>
+<span id="line382"></span>                // Update debug info:
+<span id="line383"></span>
+<span id="line384"></span>                document.getElementById("ploc").textContent = String(active_pillar) + "/" + String(landingsAmount-1);
+<span id="line385"></span>                document.getElementById("x_next_pillar").textContent = String(distPillar(active_pillar)[0].toFixed(2));
+<span id="line386"></span>                document.getElementById("y_next_pillar").textContent = String(distPillar(active_pillar)[1].toFixed(2));
+<span id="line387"></span>                document.getElementById("x_pos").textContent = String(lander.position.x.toFixed(2));
+<span id="line388"></span>                document.getElementById("y_pos").textContent = String(lander.position.y.toFixed(2));
+<span id="line389"></span>                document.getElementById("fuel").textContent = String(fuel);
+<span id="line390"></span>                document.getElementById("score").textContent = String(score);
+<span id="line391"></span>
+<span id="line392"></span>                window.requestAnimationFrame(run);
+<span id="line393"></span>                Engine.update(engine, delta)
+<span id="line394"></span>            })();
+<span id="line395"></span>        </span><span>&lt;/<span class="end-tag">script</span>&gt;</span><span>
+<span id="line396"></span>    </span><span>&lt;/<span class="end-tag">body</span>&gt;</span><span>
+<span id="line397"></span></span><span>&lt;/<span class="end-tag">html</span>&gt;</span><span></span></pre><menu type="context" id="actions"><menuitem id="goToLine" label="Go to Line…" accesskey="L"></menuitem><menuitem id="wrapLongLines" label="Wrap Long Lines" type="checkbox"></menuitem><menuitem id="highlightSyntax" label="Syntax Highlighting" type="checkbox" checked="true"></menuitem></menu></body></html>
