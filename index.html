@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="css/style-1.html">
+        <title>
+            EF 152 Project Alpha
+        </title>
+    </head>
+    <body>
+        <h3>Rooftop Rocket</h3>
+        <i>Use arrow keys. Land on buildings to get fuel and score.</i>
+        <div>
+            Pillar loc: <span id="ploc">0000</span><br>
+            X pos: <span id="x_pos">X</span> Y pos: <span id="y_pos">Y</span> <br>
+            X dist to next pillar: <span id="x_next_pillar">X</span> <br>
+            Y dist to next pillar: <span id="y_next_pillar">Y</span> <br>
+            Fuel Remaining: <span id="fuel">0000</span> <br>
+            Score: <span id="score">0000</span> <br>
+            <input type="text" placeholder="vel" id="input_vel" value="0">
+            <input type="text" placeholder="angle (deg)" id="vel_angle" value="0">
+            <button onclick="velInput()">Submit velocity info</button>
+        </div>
+        <canvas id="cv" style="border:2px solid gray;"></canvas>
+        <script src="scripts/matter.min.js" type="text/javascript"></script>
+        <script src="scripts/simulation.js" type="text/javascript"></script>
+    </body>
+</html>
