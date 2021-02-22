@@ -27,8 +27,8 @@ var Engine = Matter.Engine,
 // Create engine & render objects
 var engine = Engine.create(),
     world = engine.world;
-var width = 1280,
-    height = 720;
+var width = 900,
+    height = 450;
 var render = Render.create({
     canvas: cv,
     engine: engine,
@@ -102,7 +102,7 @@ var landingsStackCount = -1;
 var landings = Composites.stack(0, height*0.95, landingsAmount, 1, 0, 0, function(x, y) {
     landingsStackCount++;
     let landingHeight = randomNBias(200,1200,950,0.75);
-    if (landingsStackCount == 0) { 
+    if (landingsStackCount == 0) {
         landingsPosData[landingsStackCount] = [0, landingHeight];
         return Bodies.rectangle(x, y, 50, landingHeight, {
         isStatic: true,
@@ -132,7 +132,7 @@ var landingsSensorsStackCount = -1;
 Composite.scale(landings,1,-2,{x:width*0.5,y:height*.98});
 var landingsSensors = Composites.stack(0, height*0.95, landingsAmount, 1, 100, 0, function(x, y) {
     landingsSensorsStackCount++;
-    if (landingsStackCount == 0) { 
+    if (landingsStackCount == 0) {
         return Bodies.rectangle(landingsPosData[landingsSensorsStackCount][0]+10, landingsPosData[landingsSensorsStackCount][1], 30, 10, {
         isStatic: true,
         isSensor: true,
@@ -196,7 +196,7 @@ function velInput() {
 // Sensor manager
 Events.on(engine, 'collisionStart', function(event) {
     var pairs = event.pairs;
-    
+
     for (var i = 0, j = pairs.length; i != j; ++i) {
         var pair = pairs[i];
 
@@ -213,7 +213,7 @@ Events.on(engine, 'collisionStart', function(event) {
 });
 Events.on(engine, 'collisionEnd', function(event) {
     var pairs = event.pairs;
-    
+
     for (var i = 0, j = pairs.length; i != j; ++i) {
         var pair = pairs[i];
 
