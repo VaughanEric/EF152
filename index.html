@@ -25,14 +25,15 @@
             Y Dist to Next Pillar: <span id="y_next_pillar">Y</span> <br>
         </div>
         <div class="right-container">
-            X Vel: <input type="text" placeholder="vel" id="input_vel" value="0"> <br>
-            Y Vel: <input type="text" placeholder="angle (deg)" id="vel_angle" value="0"> <br><br>
-            <button onclick="velInput()">Submit Velocity Info</button> <br>
+            X<sub>0</sub> Vel: <input type="range" min="1" max="50" class="rangeInput" id="input_vel" value="0"> <span id="vel_disp">0</span> u/s <br>
+            &theta; from Horizontal: <input type="range" min="0" max="90" class="rangeInput" id="vel_angle" value="45"> <span id="ang_disp">0</span>&deg; <br><br>
+            <button onclick="velInput()">Launch</button> <br>
         </div>
         <div class="bottom-container">
             <canvas id="cv" style="border:2px solid #f4d160;"></canvas>
         </div>
         <script src="scripts/matter.min.js" type="text/javascript"></script>
         <script src="scripts/simulation.js" type="text/javascript"></script>
+        <script src="scripts/sliderUpdate.js" type="text/javascript"></script>
     </body>
 </html>
