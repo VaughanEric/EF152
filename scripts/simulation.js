@@ -1,5 +1,8 @@
 // Initialization
 var score = 0;
+var defaultCategory = 0x0001,
+    background = 0x0002,
+    indicator = 0x0003;
 // Key Controls
 const keys = [];
 document.body.addEventListener("keyup", function(e) {
@@ -27,21 +30,21 @@ var Engine = Matter.Engine,
 // Create engine & render objects
 var engine = Engine.create(),
     world = engine.world;
-var width = 900,
-    height = 450;
+
+var width = window.innerWidth*0.67,
+    height = window.innerHeight*0.67;
 var render = Render.create({
     canvas: cv,
     engine: engine,
     options: {
         width: width,
         height: height,
-        background: 'transparent',
         wireframes: false,
         showAngleIndicator: false,
         showCollisions: true,
         showVelocity: true,
         hasBounds: true,
-        background: 'DSCN0457-16x9.jpg'
+        background: 'transparent'
     }
 });
 engine.world.gravity.y = .98;
@@ -49,47 +52,8 @@ engine.world.gravity.y = .98;
 function randomNBias(min, max, bias, influence) {
     var rnd = Math.random() * (max - min) + min,   // random in range
     mix = Math.random() * influence;           // bias weight
-    return rnd * (1 - mix) + bias * mix;           // mix full range and bias
+    return Math.round( rnd * (1 - mix) + bias * mix );           // mix full range and bias
 }
-
-/*size = 50;
-stackCount = -1
-preVert = 0;
-var platformWidth = randomNBias(80,125,100,0.75);
-//var mountainLength = randomNBias(300,600,475,0.85);
-var mountainLength = 700;
-var platformLoc = randomNBias(0,0.75,0.5,0.25);
-var triangleMatrix = Vertices.create([
-    {x:0,y:0},
-    //{x:mountainLength*platformLoc,y:-325},
-    //{x:(mountainLength*platformLoc)+platformWidth,y:-325},
-    {x:0,y:-325},
-    {x:mountainLength,y:-325},
-    {x:mountainLength,y:0}
-]);
-console.log(platformLoc);
-var terrainBody = Bodies.fromVertices(width*0.65,height*0.9,triangleMatrix,
-{
-    isStatic: true,
-    render: {fillStyle: 'brown'}
-});
-var platformLanding = Bodies.rectangle((width*0.65)+mountainLength,height*0.9,
-((mountainLength*platformLoc)+platformWidth)-mountainLength*platformLoc,
-65, {
-    isStatic: true
-});*/
-
-/*difficulty = .95
-for (i = 0; i < mountains.length; i++) {
-        let tempHeight = randomNBias(100,400,350,1);
-        let tempWidth = 100
-        mountains[i] = Bodies.trapezoid(2560*(i/24), height+(tempHeight*0.5), 100, tempHeight, 0.9, {
-        isStatic: true,
-        render: { fillStyle: 'brown' }
-    });
-    console.log(randomNBias(10,50,15,1))
-}*/
-// Landing pillars
 var landingsPosData = [
     [0,0]
 ];
@@ -110,7 +74,7 @@ var landings = Composites.stack(0, height*0.95, landingsAmount, 1, 0, 0, functio
         render: {
             fillStyle: 'grey'
         }
-        });
+    });
         }
         else{
         let x_pos = x + randomNBias(125,600,500,0.75);
@@ -121,7 +85,7 @@ var landings = Composites.stack(0, height*0.95, landingsAmount, 1, 0, 0, functio
         render: {
             fillStyle: 'grey'
         }
-        });
+    });
         }
 });
 // Landing sensors
@@ -137,6 +101,9 @@ var landingsSensors = Composites.stack(0, height*0.95, landingsAmount, 1, 100, 0
         isStatic: true,
         isSensor: true,
         friction: 1,
+        collisionFilter: {
+            category: defaultCategory
+        },
         render: { strokeStyle: inactive,
                     lineWidth: 1,
                     fillStyle: 'transparent' }
@@ -156,42 +123,65 @@ var landingsSensors = Composites.stack(0, height*0.95, landingsAmount, 1, 100, 0
 Composite.scale(landingsSensors,1,-2,{x:width*0.5,y:height*0.34});
 var x_ini = landingsPosData[0][0]+20,
     y_ini = (-1)*(landingsPosData[0][1]+landingsPosData[0][1]*0.5);
+var lastLoc = [ x_ini, y_ini + 5 ],
+    nextLoc = [ x_ini + distPillar(0)[0], y_ini + distPillar(0)[1] ],
+    lastScore = score;
 var lander = Bodies.rectangle(x_ini,y_ini,40,190, {
-    render: {
-            fillStyle: 'white'
+        collisionFilter: {
+            mask: defaultCategory
+        },
+        render: { fillStyle: 'black',
+        strokeStyle: inactive,
+        friction: 0.0,
+        lineWidth: 5,
+        sprite: {
+                texture: 'media/game/rocket/rocket_cropped.png',
+                xScale: 0.0757*1.125,
+                yScale: 0.14
+            }
         },
         density: .0000002
 });
 var initialBodies = [
-    ground = Bodies.rectangle(width*1,height*0.4,landingsPosData[15][0]+width*1.5,60, {
+    ground = Bodies.rectangle(width*1,height*0.2,landingsPosData[15][0]+width*1.5,60, {
         isStatic: true,
         friction: 0.75,
+        collisionFilter: {
+            category: defaultCategory
+        },
         render: {
-            fillStyle: 'transparent'
+            fillStyle: 'grey'
+        }
+    }
+    ),
+    background = Bodies.rectangle(x_ini,y_ini,width,height, {
+        collisionFilter: {
+            mask: background
+        },
+        render: {
+            fillStyle: 'black',
+            strokeStyle: inactive,
+            lineWidth: 5,
+            sprite: {
+               texture: 'media/game/background/background169.jpg',
+               xScale: .5,
+               yScale: .5
+            },
+            fillStyle: 'black'
         }
     }
     )
 ];
-/*var mountainTemplate = Vertices.fromPath('100 0 75 50 100 100 25 125 0 50 25 0');
-var mountainPath = Bodies.fromVertices(width*0.5, height+300, mountainTemplate, {
-    render: {
-        fillStyle: 'black',
-        strokeStyle: 'orange',
-        lineWidth: 2
-    }
-});*/
 
-//World.add(world,[terrainBody,platformLanding]);
-
-World.add(world, [ lander, landings, landingsSensors, initialBodies[0] ]);
-World.add(world, initialBodies[0]);
+World.add(world, [ landings, landingsSensors, initialBodies[0], initialBodies[1], lander ]);
 Render.run(render);
-
+var launched = false;
 function velInput() {
     var input_vel = document.getElementById("input_vel").value;
     var vel_angle = document.getElementById("vel_angle").value;
     Body.setVelocity(lander, {x: (input_vel*Math.cos(vel_angle*(Math.PI/180))), y: -(input_vel*Math.sin(vel_angle*(Math.PI/180)))})
-    console.log('vel data submitted');
+    launched = true;
+    console.log('Launched set to true');
 }
 // Sensor manager
 Events.on(engine, 'collisionStart', function(event) {
@@ -268,9 +258,14 @@ Events.on(engine, 'afterUpdate', function(event) {
 function addFuel(pillarLoc) {
     if (((lander.velocity.x <= 0) & (lander.velocity.y <= 0)) & landingsFuel[pillarLoc] > 0) {
     fuel += landingsFuel[pillarLoc][0];
+    console.log('Adding ' + String(landingsFuel[pillarLoc][0]) + " to fuel")
     landingsFuel[pillarLoc] = [ 0 ];
+    lastLoc = [ lander.position.x, lander.position.y ];
+    nextLoc = [ lastLoc[0] + distPillar(pillarLoc)[0], lastLoc[1] - distPillar(pillarLoc)[1] ];
+    console.log("Last pillar location: " + lastLoc);
     score++;
-    console.log('adding fuel')
+    lastScore = score;
+    console.log("Last score: " + lastScore);
 }
 }
 // Viewport follower
@@ -317,7 +312,29 @@ Events.on(engine, 'beforeTick', function() {
         /*console.log('MIN X:' + render.bounds.min.x + ' // MAX X:' + render.bounds.max.x);
         console.log('MIN Y:' + render.bounds.min.y + ' // MAX Y:' + render.bounds.max.y);*/
 
+        // move the background in accordance with the viewport
 
+        Body.setPosition(background,
+            {x: ( (landingsSensors.bodies[0].position.x)+(lander.position.x*0.9) ) + 600,
+             y: (landingsSensors.bodies[0].position.y*0.1)+(lander.position.y*0.9)})
+
+    }
+});
+
+Events.on(engine, 'afterUpdate', function(event) {
+    if ( (launched & ( (lander.position.y > 0 ) | (lander.position.x > nextLoc[0]*1.125) ) ) == 1 ) {
+        Body.setPosition(lander,
+            {
+                x: lastLoc[0],
+                y: lastLoc[1]
+            })
+        Body.setVelocity(lander,
+            {
+                x: 0,
+                y: 0
+            })
+        console.log("Launch failed. Reverting...")
+        launched = false;
     }
 });
 
@@ -350,6 +367,7 @@ Engine.run(engine);
         key_down = true;
 
     }
+
     //if ((lander.velocity.y > 0.15) & (lander.velocity.y > 0)) {}
     Body.setAngle(lander,0); // lock rotation of the lander
 
