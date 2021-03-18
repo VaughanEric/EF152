@@ -1,19 +1,22 @@
 span {
-    font-family: 'Courier New', Courier, monospace;
+    font-family: 'Nunito', sans-serif;
 }
 
 body {
-  text-align: center;
-  background-image: linear-gradient(#28527A, #8ac4d0, #9fb8ad);
-  background-repeat: no-repeat;
-  background-attachment: fixed;
+    text-align: center;
+    background-image: linear-gradient(#28527A, #8ac4d0, #9fb8ad);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
 }
 
 h1 {
-  color: #fbeeac;
-  -webkit-text-stroke: 1px #F4D160;
-  font-size: 300%;
-  text-shadow: 2px 2px #000000;
+    color: #fbeeac;
+    -webkit-text-stroke: 1px #F4D160;
+    font-size: 300%;
+    text-shadow: 3px 3px #000000;
+    font-family: 'Nunito', sans-serif;
+    font-style: italic;
+    font-weight: bold;
 }
 
 h3 {
@@ -34,10 +37,13 @@ a:hover {
     padding-left: 20px;
     padding-right: 20px;
     font-size: 125%;
+    font-family: 'Nunito', sans-serif;
+    font-style: italic;
+    font-weight: bold;
 }
 
 .top-container {
-    padding-top: 5px;
+    padding-bottom: 5px;
     position: relative;
 }
 
@@ -46,16 +52,23 @@ a:hover {
     right: 10%;
     display: inline-block;
     background-color: #ddf3f5;
-    padding: 5px;
     box-shadow: 5px 10px #f4d160;
+    vertical-align: middle;
+    height: 90px;
+    width: 185px;
+    font-family: 'Nunito', sans-serif;
+    line-height: 1.9;
 }
 
 .middle-container {
     position: relative;
     display: inline-block;
     background-color: #ddf3f5;
-    padding: 5px;
     box-shadow: 5px 10px #f4d160;
+    vertical-align: middle;
+    height: 90px;
+    width: 225px;
+    font-family: 'Nunito', sans-serif;
 }
 
 .right-container {
@@ -63,11 +76,19 @@ a:hover {
     left: 10%;
     display: inline-block;
     background-color: #ddf3f5;
-    padding: 5px;
     box-shadow: 5px 10px #f4d160;
+    vertical-align: middle;
+    height: 90px;
+    width: 310px;
+    font-family: 'Nunito', sans-serif;
+    line-height: 1.75;
 }
 
 .bottom-container {
     padding-top: 25px;
     padding-bottom: 5px;
+}
+
+.button {
+    font-family: 'Nunito', sans-serif;
 }
