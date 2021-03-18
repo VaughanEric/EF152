@@ -3,6 +3,8 @@
     <head>
         <link rel="stylesheet" href="css/homepage.css">
         <link rel="icon" href="favicon.ico">
+        <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@1,800&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Nunito&display=swap" rel="stylesheet">
         <title>
             EF 152 Project Alpha
         </title>
@@ -26,8 +28,8 @@
         </div>
         <div class="right-container">
             X<sub>0</sub> Vel: <input type="range" min="1" max="50" class="rangeInput" id="input_vel" value="0"> <span id="vel_disp">0</span> u/s <br>
-            &theta; from Horizontal: <input type="range" min="0" max="90" class="rangeInput" id="vel_angle" value="45"> <span id="ang_disp">0</span>&deg; <br><br>
-            <button onclick="velInput()">Launch</button> <br>
+            &theta; from Horizontal: <input type="range" min="0" max="90" class="rangeInput" id="vel_angle" value="45"> <span id="ang_disp">0</span>&deg; <br>
+            <button class="button" onclick="velInput()">Launch</button> <br>
         </div>
         <div class="bottom-container">
             <canvas id="cv" style="border:2px solid #f4d160;"></canvas>
