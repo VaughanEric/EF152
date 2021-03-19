@@ -20,7 +20,7 @@ h1 {
 }
 
 h3 {
-    color: #fbeeac;
+    color: white;
     font-family: 'Nunito', sans-serif;
 }
 
@@ -46,7 +46,7 @@ a:hover {
 hr {
     border-style: none;
     border-top-style: dotted;
-    border-color: white;
+    border-color: #fbeeac;
     border-width: 5px;
     width: 50%;
 }
