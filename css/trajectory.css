@@ -21,7 +21,7 @@ h1 {
 
 h3 {
     font-family: 'Nunito', sans-serif;
-    color: #fbeeac;
+    color: white;
 }
 
 a:link, a:visited {
@@ -46,7 +46,7 @@ a:hover {
 hr {
     border-style: none;
     border-top-style: dotted;
-    border-color: white;
+    border-color: #fbeeac;
     border-width: 5px;
     width: 50%;
 }
