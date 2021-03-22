@@ -10,6 +10,65 @@
         </title>
     </head>
     <body>
+        <div id="chooseRocket_mdl" class="modal">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h2>Select Your Rocket</h2>
+              </div>
+              <div class="modal-body">
+                <p>Choose from one of the 4 themes.</p>
+                <p>list of buttons/dot list</p>
+              </div>
+              <div class="modal-footer">
+                <button id="submitRocket" class="button" style="margin-right: 2%;">Choose Rocket</button>
+                <button id="close_btn_1" class="button">Cancel</button>
+              </div>
+            </div>
+        </div>
+        <div id="settings_mdl" class="modal">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h2>Change Game Settings</h2>
+              </div>
+              <div class="modal-body">
+                <p>Choose difficulty, rocket speed, rocket density, levels, mode</p>
+                <p>Explanations and other stuff...</p>
+              </div>
+              <div class="modal-footer">
+                <button id="submitSettings" class="button" style="margin-right: 2%;">Change Settings</button>
+                <button id="close_btn_2" class="button">Cancel</button>
+              </div>
+            </div>
+        </div>
+        <div id="startGame_mdl" class="modal">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h2>Start Rooftop Rocket</h2>
+              </div>
+              <div class="modal-body">
+                <p>Change the game settings to your liking....</p>
+                <p>Same contents of settings model</p>
+              </div>
+              <div class="modal-footer">
+                <button id="startGame_btn" class="button" style="margin-right: 2%;"><b>Start Game</b></button>
+              </div>
+            </div>
+        </div>
+        <div id="launchMode_mdl" class="modal">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h2>Launch Mode</h2>
+              </div>
+              <div class="modal-body">
+                V<sub>0</sub> Vel: <input type="range" min="1" max="50" class="rangeInput" id="input_vel" value="0"> <span id="vel_disp">0</span> u/s <br>
+            &theta; from Horizontal: <input type="range" min="0" max="90" class="rangeInput" id="vel_angle" value="45"> <span id="ang_disp">0</span>&deg; <br>
+            Canvas element to graph the trajectory
+              </div>
+              <div class="modal-footer">
+                <button id="launchMode_btn" class="button" style="margin-right: 2%;"><b>Launch!</b></button>
+              </div>
+            </div>
+        </div>
         <div class="top-container">
             <h1>Rooftop Rocket</h1>
             <h3 class="links"><a href="how_to_play.html">How To Play</a></h3>
@@ -27,13 +86,112 @@
             Y Dist to Next Pillar: <span id="y_next_pillar">Y</span> <br>
         </div>
         <div class="right-container">
-            X<sub>0</sub> Vel: <input type="range" min="1" max="50" class="rangeInput" id="input_vel" value="0"> <span id="vel_disp">0</span> u/s <br>
+            V<sub>0</sub> Vel: <input type="range" min="1" max="50" class="rangeInput" id="input_vel" value="0"> <span id="vel_disp">0</span> u/s <br>
             &theta; from Horizontal: <input type="range" min="0" max="90" class="rangeInput" id="vel_angle" value="45"> <span id="ang_disp">0</span>&deg; <br>
+            <button id="enableLaunchMode" class="button">Enable Launch Mode</button>
             <button class="button" onclick="velInput()">Launch</button> <br>
+        </div>
+        <div class="settings-container">
+            <button id="chooseRocket_btn" class="button" style="margin-top: 16.5px;">Choose Rocket</button> <br>
+            <button id="settings_btn" class="button" style="margin-top: 16.5px;">Settings</button>
+            <button id="pause_btn" class="button" style="margin-top: 16.5px;">Pause Game</button>
         </div>
         <div class="bottom-container">
             <canvas id="cv" style="border:2px solid #f4d160;"></canvas>
         </div>
+        <script>
+            var prohibitNewModal = true;
+            window.onload = function() {
+                startGame_mdl.classList.add('show');
+                startGame_btn.onclick = function() {
+                    startGame_mdl.classList.remove('show');
+                    console.log("Starting game with selected settings...")
+                    setGameState(0,2);
+                    prohibitNewModal = false;
+                }
+            }
+        </script>
+        <script>
+            // Launch mode coordinator
+            enableLaunchMode.onclick = function() {
+                if (!prohibitNewModal) {
+                    launchMode_mdl.classList.add('show');
+                    prohibitNewModal = true;
+                    pause();
+                }
+            }
+            launchMode_btn.onclick = function() {
+                launchMode_mdl.classList.remove('show');
+                prohibitNewModal = false;
+                pause();
+            }
+        </script>
+        <script>
+            // Handle the rocket and settings modification windows
+
+            var chooseRocket_mdl = document.getElementById("chooseRocket_mdl");
+            var settings_mdl = document.getElementById("settings_mdl");
+
+            var chooseRocket_btn = document.getElementById("chooseRocket_btn");
+            var settings_btn = document.getElementById("settings_btn");
+
+            var span = document.getElementsByClassName("close")[0];
+
+            // When the user clicks the button, open the modal 
+            chooseRocket_btn.onclick = function() {
+                if (!prohibitNewModal) {
+                    chooseRocket_mdl.classList.add('show');
+                    prohibitNewModal = true;
+                }
+            }
+            settings_btn.onclick = function() {
+                if (!prohibitNewModal) {
+                    settings_mdl.classList.add('show');
+                    prohibitNewModal = true;
+                }
+            }
+            pause_btn.onclick = function() {
+                if (!prohibitNewModal) {
+                    pause();
+                }
+                if (paused) {
+                    document.getElementById("pause_btn").innerHTML = "Resume Game";
+                }
+                else {
+                    document.getElementById("pause_btn").innerHTML = "Pause Game";
+                }
+            }
+
+            // Close the modal based on the following conditions
+            close_btn_1.onclick = function() {
+                chooseRocket_mdl.classList.remove('show');
+                prohibitNewModal = false;
+            }
+            close_btn_2.onclick = function() {
+                settings_mdl.classList.remove('show');
+                prohibitNewModal = false;
+            }
+
+            submitRocket.onclick = function() {
+                chooseRocket_mdl.classList.remove('show');
+                prohibitNewModal = false;
+                console.log("Rocket model chosen. Resetting to previous game state.")
+            }
+            submitSettings.onclick = function() {
+                settings_mdl.classList.remove('show');
+                prohibitNewModal = false;
+                console.log("Game settings changed. Resetting game state.")
+            }
+
+            // When the user clicks anywhere outside of the modal, close it
+            window.onclick = function(event) {
+                if (event.target == settings_mdl || event.target == chooseRocket_mdl) {
+                    chooseRocket_mdl.classList.remove('show');
+                    settings_mdl.classList.remove('show');
+                    prohibitNewModal = false;
+                }
+            }
+        </script>
         <script src="scripts/matter.min.js" type="text/javascript"></script>
         <script src="scripts/simulation.js" type="text/javascript"></script>
         <script src="scripts/sliderUpdate.js" type="text/javascript"></script>

@@ -17,6 +17,7 @@ h1 {
     font-family: 'Nunito', sans-serif;
     font-style: italic;
     font-weight: bold;
+    margin-bottom: -0.35vh;
 }
 
 h3 {
@@ -49,13 +50,13 @@ a:hover {
 
 .left-container {
     position: relative;
-    right: 10%;
+    right: 7%;
     display: inline-block;
     background-color: #ddf3f5;
     box-shadow: 5px 10px #f4d160;
     vertical-align: middle;
     height: 90px;
-    width: 185px;
+    width: 195px;
     font-family: 'Nunito', sans-serif;
     line-height: 1.9;
 }
@@ -63,6 +64,7 @@ a:hover {
 .middle-container {
     position: relative;
     display: inline-block;
+    right: 2%;
     background-color: #ddf3f5;
     box-shadow: 5px 10px #f4d160;
     vertical-align: middle;
@@ -73,13 +75,26 @@ a:hover {
 
 .right-container {
     position: relative;
-    left: 10%;
+    left: 3%;
     display: inline-block;
     background-color: #ddf3f5;
     box-shadow: 5px 10px #f4d160;
     vertical-align: middle;
-    height: 90px;
-    width: 310px;
+    height: 110px;
+    width: 340px;
+    font-family: 'Nunito', sans-serif;
+    line-height: 1.75;
+}
+
+.settings-container {
+    position: relative;
+    left: 7%;
+    display: inline-block;
+    background-color: #ddf3f5;
+    box-shadow: 5px 10px #f4d160;
+    vertical-align: middle;
+    height: 110px;
+    width: 240px;
     font-family: 'Nunito', sans-serif;
     line-height: 1.75;
 }
@@ -91,4 +106,94 @@ a:hover {
 
 .button {
     font-family: 'Nunito', sans-serif;
+}
+
+/* Modal (settings selection window) */
+.modal {
+    position: fixed;
+    z-index: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    
+    top: 17.5%;
+    opacity: 0;
+    scale: 0.85;
+    transition: top 0.32s, scale 0.32s, opacity 0.32s;
+}
+.modal.show {
+    z-index: 1;
+	top: 25%;
+    scale: 1;
+    opacity: 1;
+}
+
+/* X Button */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 48px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Modal Header */
+.modal-header {
+    padding: 2px 16px;
+    background-color: #ddf3f5;
+    border-radius: 10px 10px 0px 0px;
+    color: black;
+}
+
+/* Modal Body */
+.modal-body {
+    padding: 2px 16px;
+    color: white;
+    background-color: rgba(0,0,0, 0.45); /* Black w/opacity/see-through */
+}
+
+/* Modal Footer */
+.modal-footer {
+    padding: 2px 16px;
+    background-color: #ddf3f5;
+    color: black;
+    border-radius: 0px 0px 15px 15px;
+}
+
+/* Modal Content */
+.modal-content {
+    position: relative;
+    margin: auto;
+    padding: 0;
+    width: 80%;
+    border-radius: 15px 0px 15px 15px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    font-family: 'Nunito', sans-serif;
+}
+
+/* Button Style */
+
+.button {
+    display: inline-block;
+    cursor: pointer;
+    background-color: #ffc420;
+    padding: 5px 20px;
+    color: white;
+    border-radius: 6px;
+    border: none;
+    text-decoration: none;
+    transition: box-shadow .08s;
+    font-size: 15px;
+    margin: 0 auto;
+}
+
+.button:active {
+    box-shadow: inset 0 1px 3px #8ac4d0;
 }
