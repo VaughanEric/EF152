@@ -18,6 +18,7 @@
               <div class="modal-body">
                 <p>Choose from one of the 4 themes.</p>
                 <p>list of buttons/dot list</p>
+                <code>In development</code>
               </div>
               <div class="modal-footer">
                 <button id="submitRocket" class="button" style="margin-right: 2%;">Choose Rocket</button>
@@ -31,8 +32,12 @@
                 <h2>Change Game Settings</h2>
               </div>
               <div class="modal-body">
-                <p>Choose difficulty, rocket speed, rocket density, levels, mode</p>
-                <p>Explanations and other stuff...</p>
+                <b>Difficulty:</b> <input type="range" min="0" max="2" class="rangeInput" id="difficulty_input" value="1"> <span id="difficulty_disp">1</span> <br>
+                <b>Pillars Per Level:</b> <input type="range" min="12" max="24" class="rangeInput" id="totalPillar_input" value="18"> <span id="totalPillar_disp">18</span> <br>
+                <b>Number of Levels:</b> <input type="range" min="1" max="4" class="rangeInput" id="totalLevels_input" value="1"> <span id="totalLevels_disp">1</span> <br>
+                <b>Select Mode:</b> <button id="mode_normal" class="button">Normal</button> <button id="time_mode" class="button">Time Trials</button>
+                <p><b><i>Be sure to pick your rocket!</i></b></p>
+                <code>In development</code>
               </div>
               <div class="modal-footer">
                 <button id="submitSettings" class="button" style="margin-right: 2%;">Change Settings</button>
@@ -43,29 +48,32 @@
         <div id="startGame_mdl" class="modal">
             <div class="modal-content">
               <div class="modal-header">
-                <h2>Start Rooftop Rocket</h2>
+                <h2 style="margin-left:-2%;">Welcome!</h2>
               </div>
               <div class="modal-body">
-                <p>Change the game settings to your liking....</p>
-                <p>Same contents of settings model</p>
+                <p>Welcome to <i>Blast Off!</i> Use the arrow keys to move your rocket, or launch it as a projectile to the next pillar. </p>
+                <p>Be sure to choose your favorite rocket!</p>
               </div>
               <div class="modal-footer">
                 <button id="startGame_btn" class="button" style="margin-right: 2%;"><b>Start Game</b></button>
               </div>
             </div>
         </div>
-        <div id="launchMode_mdl" class="modal">
+        <div id="launchMode_mdl" class="modal" style="top:15%;">
             <div class="modal-content">
               <div class="modal-header">
                 <h2>Launch Mode</h2>
               </div>
-              <div class="modal-body">
-                V<sub>0</sub> Vel: <input type="range" min="1" max="50" class="rangeInput" id="input_vel" value="0"> <span id="vel_disp">0</span> u/s <br>
-            &theta; from Horizontal: <input type="range" min="0" max="90" class="rangeInput" id="vel_angle" value="45"> <span id="ang_disp">0</span>&deg; <br>
-            Canvas element to graph the trajectory
+              <div class="modal-body" style="background-color: rgba(0,0,0, 0.75);">
+                V<sub>0</sub> Vel: <input type="range" min="1" max="30" class="rangeInput" id="launchMode_vel_input" value="0"> <span id="launchMode_vel_disp">0</span> u/s <br>
+            &theta; from Horizontal: <input type="range" min="45" max="90" class="rangeInput" id="launchMode_vel_angle" value="45"> <span id="launchMode_ang_disp">0</span>&deg; <br>
+            Graph Scale: <input type="range" min="10" max="175" class="rangeInput" id="graphZoom" value="100"> <span id="graphZoom_disp">100</span>% <br>
+
+                <canvas id="traplot" style="border:2px solid #f4d160;"></canvas>
               </div>
               <div class="modal-footer">
                 <button id="launchMode_btn" class="button" style="margin-right: 2%;"><b>Launch!</b></button>
+                <button id="launchMode_close" class="button" style="margin-right: 2%;">Close</button>
               </div>
             </div>
         </div>
@@ -99,6 +107,7 @@
         <div class="bottom-container">
             <canvas id="cv" style="border:2px solid #f4d160;"></canvas>
         </div>
+        <code>In development</code>
         <script>
             var prohibitNewModal = true;
             window.onload = function() {
@@ -106,7 +115,7 @@
                 startGame_btn.onclick = function() {
                     startGame_mdl.classList.remove('show');
                     console.log("Starting game with selected settings...")
-                    setGameState(0,2);
+                    setGameState(0,1);
                     prohibitNewModal = false;
                 }
             }
@@ -117,13 +126,27 @@
                 if (!prohibitNewModal) {
                     launchMode_mdl.classList.add('show');
                     prohibitNewModal = true;
-                    pause();
+                    if (!paused) {
+                        pause();
+                        pauseButtonUpdate();
+                    }
                 }
             }
             launchMode_btn.onclick = function() {
                 launchMode_mdl.classList.remove('show');
                 prohibitNewModal = false;
-                pause();
+                if (paused) {
+                    pause();
+                    pauseButtonUpdate();
+                }
+            }
+            launchMode_close.onclick = function() {
+                launchMode_mdl.classList.remove('show');
+                prohibitNewModal = false;
+                if (paused) {
+                    pause();
+                    pauseButtonUpdate();
+                }
             }
         </script>
         <script>
@@ -153,7 +176,10 @@
             pause_btn.onclick = function() {
                 if (!prohibitNewModal) {
                     pause();
+                    pauseButtonUpdate();
                 }
+            }
+            function pauseButtonUpdate() {
                 if (paused) {
                     document.getElementById("pause_btn").innerHTML = "Resume Game";
                 }
@@ -195,5 +221,6 @@
         <script src="scripts/matter.min.js" type="text/javascript"></script>
         <script src="scripts/simulation.js" type="text/javascript"></script>
         <script src="scripts/sliderUpdate.js" type="text/javascript"></script>
+        <script src="scripts/traplot.js" type="text/javascript"></script>
     </body>
 </html>
