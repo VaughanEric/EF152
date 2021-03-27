@@ -113,9 +113,9 @@ a:hover {
 .modal {
     position: fixed;
     z-index: 0;
-    left: 25%;
-    width: 50%;
-    height: 50%;
+    left: 12.5%;
+    width: 75%;
+    height: 100%;
     overflow: auto;
     top: 17.5%;
     /*top: 50%;
@@ -126,6 +126,7 @@ a:hover {
     transition: top 0.32s, scale 0.32s, opacity 0.32s;
   /*  transform: translate(-50%, -50%);*/
 }
+
 .modal.show {
     z-index: 1;
 	  top: 25%;
@@ -183,7 +184,6 @@ a:hover {
 }
 
 /* Button Style */
-
 .button {
     display: inline-block;
     cursor: pointer;
