@@ -85,7 +85,7 @@ function setGameState(state, difficulty) {
             break;
         case 1:
             randFuelLimit = [5, 20, 10, 0.95];
-            randLandings_hLimits = [200, 500, 450, 0.75];
+            randLandings_hLimits = [300, 650, 400, 0.75];
             randLandings_xPosLimits = [100, 200, 175, 0.75];
             break;
         case 2:
@@ -260,6 +260,13 @@ function velInput() {
     launched = true;
     console.log('Launched set to true');
 }
+function launchMode_velInput() {
+    var input_vel = document.getElementById("launchMode_vel_input").value;
+    var vel_angle = document.getElementById("launchMode_vel_angle").value;
+    Body.setVelocity(lander, {x: (input_vel*Math.cos(vel_angle*(Math.PI/180))), y: -(input_vel*Math.sin(vel_angle*(Math.PI/180)))})
+    launched = true;
+    console.log('Launched set to true');
+}
 // Sensor manager
 Events.on(engine, 'collisionStart', function(event) {
     var pairs = event.pairs;
@@ -338,7 +345,7 @@ Events.on(runner, 'afterUpdate', function(event) {
     //key_down = false;
 });
 function addFuel(pillarLoc) {
-    if (((lander.velocity.x <= 0) & (lander.velocity.y <= 0)) & landingsFuel[pillarLoc] > 0) {
+    if (((Math.abs(lander.velocity.x) <= 0.1) & (Math.abs(lander.velocity.y) <= 0.1)) & landingsFuel[pillarLoc] > 0) {
     fuel += landingsFuel[pillarLoc][0];
     console.log('Adding ' + String(landingsFuel[pillarLoc][0]) + " to fuel")
     landingsFuel[pillarLoc] = [ 0 ];
