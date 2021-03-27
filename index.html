@@ -96,8 +96,9 @@
             <button id="settings_btn" class="button" style="margin-top: 16.5px;">Settings</button>
             <button id="pause_btn" class="button" style="margin-top: 16.5px;">Pause Game</button>
         </div>
+        <br><br>
         <div class="bottom-container">
-            <canvas id="cv" style="border:2px solid #f4d160;"></canvas>
+            <canvas id="cv" style="border:2px solid #f4d160;"></canvas><br><br>
         </div>
         <script>
             var prohibitNewModal = true;
@@ -137,7 +138,7 @@
 
             var span = document.getElementsByClassName("close")[0];
 
-            // When the user clicks the button, open the modal 
+            // When the user clicks the button, open the modal
             chooseRocket_btn.onclick = function() {
                 if (!prohibitNewModal) {
                     chooseRocket_mdl.classList.add('show');
