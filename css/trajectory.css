@@ -50,3 +50,23 @@ hr {
     border-width: 5px;
     width: 50%;
 }
+
+.left-rocket {
+    transform: rotate(20deg);
+    position: absolute;
+    top: 10%;
+    left: -10%;
+    width: 750px;
+    height: auto;
+    max-width: 50vw
+}
+
+.right-rocket {
+    transform: rotate(-20deg);
+    position: absolute;
+    right: -5%;
+    bottom: 15%;
+    width: 500px;
+    height: auto;
+    max-width: 25vw
+}
