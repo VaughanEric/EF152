@@ -56,6 +56,7 @@ function traplotVarAssign() {
     launchMode_vel_disp.innerHTML = launchMode_vel_range.value;
     launchMode_ang_disp.innerHTML = launchMode_ang_range.value;
     graphZoom_disp.innerHTML = graphZoom.value;
+    traplotCTX.font = "12px Arial";
 }
 var totalScale = 1;
 var plotScale = 30; // scale correction to try and match the game viewport scale
@@ -89,6 +90,8 @@ function plot(vel,angle) {
         pointPlot(totalScale*plotScale*tempPoint[0], totalScale*plotScale* (tempPoint_under[1] + y0Diff - graphCanvas.height*0.5),"#808080",1.5);
         pointPlot(totalScale*plotScale*tempPoint[0], totalScale*plotScale* (tempPoint_over[1] + y0Diff - graphCanvas.height*0.5),"#808080",1.5);
     }
+    traplotCTX.fillStyle = "#00FF00";
+    traplotCTX.fillText("Next Pillar", totalScale*next_pillar_xy[0]+10, -next_pillar_xy[1]*totalScale-10);
     pointPlot(totalScale*next_pillar_xy[0], -next_pillar_xy[1]*totalScale,"#00FF00",2.5);
 }
 function ctxClear() {
