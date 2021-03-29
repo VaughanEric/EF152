@@ -58,7 +58,7 @@ hr {
     left: -10%;
     width: 750px;
     height: auto;
-    max-width: 50vw
+    max-width: 50vw;
 }
 
 .right-rocket {
@@ -68,5 +68,5 @@ hr {
     bottom: 15%;
     width: 500px;
     height: auto;
-    max-width: 25vw
+    max-width: 25vw;
 }
