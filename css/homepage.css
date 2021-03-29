@@ -128,33 +128,34 @@ a:hover {
     position: fixed;
     z-index: 0;
     overflow: auto;
-    left: 81.5%;
-    bottom: -25%;
+    left: 22.5%;
     transition: all 0.32s ease-in-out;
     opacity: 0;
+    transform: scale(.2);
 }
 .character.show {
     z-index: 4;
-    bottom: -2%;
+    margin-top: -45%;
     opacity: 1;
 }
 .character-speech-bubble {
     z-index:6;
     position: fixed;
     overflow: auto;
-    width: 25%;
+    width: 15%;
     background-color: #ddf3f5;
     box-shadow: 5px 10px #f4d160;
     padding: 10px;
     border-radius: 10px 10px 0px 10px;
-    margin-top:40%;
+    margin-top: 40%;
     opacity: 0;
     margin-left: 54%;
     transition: all 0.42s ease-in-out;
 }
 .character-speech-bubble.show {
     opacity: 1;
-    margin-top: -10%;
+    margin-top: -30%;
+    left: 27.5%;
 }
 
 /* Modal (settings selection window) */
@@ -178,7 +179,7 @@ a:hover {
 
 .modal.show {
     z-index: 1;
-	top: 25%;
+	  top: 25%;
     transform: scale(1);
     opacity: 1;
 }
