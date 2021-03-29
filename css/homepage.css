@@ -9,6 +9,14 @@ body {
     background-attachment: fixed;
 }
 
+canvas {
+    border:2px solid #f4d160;
+}
+
+img {
+    border:2px solid #f4d160;
+}
+
 h1 {
     color: #fbeeac;
     -webkit-text-stroke: 1px #F4D160;
@@ -65,7 +73,7 @@ a:hover {
     height: 110px;
     width: 195px;
     font-family: 'Nunito', sans-serif;
-    line-height: 2.25;
+    line-height: 1.7;
 }
 
 .middle-container {
@@ -115,6 +123,39 @@ a:hover {
 .button {
     font-family: 'Nunito', sans-serif;
 }
+/* Character */
+.character {
+    position: fixed;
+    z-index: 0;
+    overflow: auto;
+    left: 81.5%;
+    bottom: -25%;
+    transition: all 0.32s ease-in-out;
+    opacity: 0;
+}
+.character.show {
+    z-index: 4;
+    bottom: -2%;
+    opacity: 1;
+}
+.character-speech-bubble {
+    z-index:6;
+    position: fixed;
+    overflow: auto;
+    width: 25%;
+    background-color: #ddf3f5;
+    box-shadow: 5px 10px #f4d160;
+    padding: 10px;
+    border-radius: 10px 10px 0px 10px;
+    margin-top:40%;
+    opacity: 0;
+    margin-left: 54%;
+    transition: all 0.42s ease-in-out;
+}
+.character-speech-bubble.show {
+    opacity: 1;
+    margin-top: -10%;
+}
 
 /* Modal (settings selection window) */
 .modal {
@@ -129,31 +170,17 @@ a:hover {
     left: 50%;
     position: absolute;*/
     opacity: 0;
-    scale: 0.85;
-    transition: top 0.32s, scale 0.32s, opacity 0.32s;
+    transform: scale(0.85);
+    transition: all 0.32s ease-in-out;
+    /*transition: top 0.32s, scale 0.32s, opacity 0.32s;*/
   /*  transform: translate(-50%, -50%);*/
 }
 
 .modal.show {
     z-index: 1;
-	  top: 25%;
-    scale: 1;
+	top: 25%;
+    transform: scale(1);
     opacity: 1;
-}
-
-/* X Button */
-.close {
-    color: #aaa;
-    float: right;
-    font-size: 48px;
-    font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
 }
 
 /* Modal Header */
@@ -218,7 +245,7 @@ a:hover {
     border-radius: 6px;
     border: none;
     text-decoration: none;
-    transition: box-shadow .08s;
+    transition: box-shadow .32s;
     font-size: 15px;
     margin: 0 auto;
 }

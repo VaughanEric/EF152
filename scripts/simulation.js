@@ -6,6 +6,59 @@ var score = 0;
 var defaultCategory = 0x0001,
     background = 0x0002,
     indicator = 0x0003;
+
+var landingsFuel = [],
+    landingsAmount,
+    landingsStackCount,
+    landingsSensorsStackCount,
+    levelsAmount,
+    setDifficulty,
+    setMode,
+    enableSound,
+    active,
+    inactive,
+    landings,
+    landingsWidth,
+    landingsSensors,
+    x_ini,
+    y_ini,
+    lastLoc,
+    nextLoc,
+    lastScore,
+    lander,
+    initialBodies,
+    ground,
+    background,
+    currLevel;
+
+//Audio initialization
+enableSound = true;
+const AudioContext = window.AudioContext || window.webkitAudioContext;
+const audioCtx = new AudioContext();
+const audioElement = document.querySelector('audio');
+const track = audioCtx.createMediaElementSource(audioElement);
+audioElement.pause();
+
+const audioGain = audioCtx.createGain();
+
+track.connect(audioGain).connect(audioCtx.destination);
+
+function updateVolume(vol){ // 0 < vol < 1
+    audioGain.gain.value = vol;
+}
+function setSoundState(state) {
+    if (state) {
+        enableSound = true;
+        if (!paused) {
+            audioElement.play();
+        }
+    }
+    else {
+        enableSound = false;
+        audioElement.pause();
+    }
+}
+
 // Key Controls
 const keys = [];
 document.body.addEventListener("keyup", function(e) {
@@ -67,12 +120,36 @@ function randomBias(min, max, bias, influence) { // bias means the value the fun
 var landingsPosData = [
     [0,0]
 ];
+landingsWidth = 125;
+const defaultFuel = 10000;
+fuel = defaultFuel;
+var mediaPath = "media/game/";
+var themes = [
+    ["t1_r.png", "t1_bg.jpg"],
+    ["t2_r.png", "t2_bg.png"],
+    ["t3_r.png", "t3_bg.png"],
+    ["t4_r.png", "t4_bg.png"],
+    ["t5_r.png", ""],
+    ["t6_r.png", ""]
+];
+var rocketTheme = "",
+    backgroundTheme = "";
 // Make a difficulty function that will change the random function values as a function of a fraction between 0 and 1.
 var randFuelLimit = [];
 var randLandings_xPosLimits = [];
 var randLandings_hLimits = [];
 var paused = false;
-function setGameState(state, difficulty) {
+var settingsParams = [
+    setMode,
+    setDifficulty,
+    landingsAmount,
+    levelsAmount
+];
+function setGameState(state, difficulty, pillarAmt, lvlsAmt) {
+    settingsParams[0] = state;
+    settingsParams[1] = difficulty;
+    settingsParams[2] = pillarAmt;
+    settingsParams[3] = lvlsAmt;
     runner.enabled = false;
     background = 0;
     World.clear(world);
@@ -82,58 +159,101 @@ function setGameState(state, difficulty) {
             randFuelLimit = [5, 20, 18, 0.95];
             randLandings_hLimits = [20, 40, 30, 0.75];
             randLandings_xPosLimits = [25, 50, 35, 0.75];
+            fuel = 100;
             break;
         case 1:
             randFuelLimit = [5, 20, 10, 0.95];
             randLandings_hLimits = [300, 650, 400, 0.75];
-            randLandings_xPosLimits = [100, 200, 175, 0.75];
+            randLandings_xPosLimits = [200, 300, 275, 0.75];
+            fuel = 50;
             break;
         case 2:
             randFuelLimit = [5, 20, 10, 0.95];
             randLandings_hLimits = [200, 1200, 950, 0.75];
             randLandings_xPosLimits = [125, 600, 500, 0.75];
+            fuel = 35;
             break;
     }
-    switch(state) { // state 0: normal, difficulty selected mode. 1: level up mode. 2: time mode. 4: stop & clear.
+    landingsAmount = pillarAmt;
+    // state 0: normal, difficulty selected mode, 1: level up mode, 2: time mode
+    // 98: stop & clear world, 99: stop & clear everything
+    switch(state) {
         case 0:
             createObjects(randFuelLimit, randLandings_hLimits, randLandings_xPosLimits);
             addObjects();
+            levelsAmount = lvlsAmt;
+            currLevel = 1;
+            document.getElementById("level").textContent = String(currLevel) + "/" + String(levelsAmount);
             runner.enabled = true;
+            paused = false;
+            if (enableSound) {
+                audioElement.play();
+            }
+            break;
+        case 1:
+            createObjects(randFuelLimit, randLandings_hLimits, randLandings_xPosLimits);
+            addObjects();
+            document.getElementById("level").textContent = String(currLevel) + "/" + String(levelsAmount);
+            runner.enabled = true;
+            paused = false;
+            if (enableSound) {
+                audioElement.play();
+            }
+            break;
+        case 98:
+            runner.enabled = false;
+            World.clear(world);
+            Engine.clear(engine);
+            audioElement.pause();
+            break;
+        case 99:
+            currLevel = 1;
+            score = 0;
+            fuel = defaultFuel;
+            runner.enabled = false;
+            World.clear(world);
+            Engine.clear(engine);
+            audioElement.pause();
             break;
     }
+    document.getElementById("ploc").textContent = String(0) + "/" + String(landingsAmount);
+}
+var rocketScaleCorrection = 0;
+var bgScaleCorrection = 0.25;
+function setTheme(rt_index, bg_index) {
+    if (rt_index > 0) {
+        rocketScaleCorrection = 0.012;
+    }
+    else {
+        rocketScaleCorrection = 0;
+    }
+    if (bg_index > 0) {
+        bgScaleCorrection = 1.25;
+    }
+    else {
+        bgScaleCorrection = 0.25;
+    }
+    rocketTheme = mediaPath + "rocket" + "/" + themes[rt_index][0];
+    backgroundTheme = mediaPath + "background" + "/" + themes[bg_index][1];
 }
 function pause() {
     if (paused) {
         runner.enabled = true;
+        if (enableSound) {
+            audioElement.play();
+        }
         paused = false;
     }
     else {
         runner.enabled = false;
+        audioElement.pause();
         paused = true;
     }
     console.log("Game paused: " + paused);
 }
-var landingsFuel = [],
-    landingsAmount,
-    landingsStackCount,
-    landingsSensorsStackCount,
-    active,
-    inactive,
-    landings,
-    landingsSensors,
-    x_ini,
-    y_ini,
-    lastLoc,
-    nextLoc,
-    lastScore,
-    lander,
-    initialBodies,
-    ground,
-    background;
 
 function createObjects(fuel_vals, landings_hData, landings_xData) {
     landingsFuel = []
-    landingsAmount = 24
     for (let i = 0; i < landingsAmount; i++) {
         landingsFuel[i] = [Math.ceil(randomBias(fuel_vals[0],fuel_vals[1],fuel_vals[2],fuel_vals[3]))];
     }
@@ -143,7 +263,7 @@ function createObjects(fuel_vals, landings_hData, landings_xData) {
         let landingHeight = randomBias(landings_hData[0],landings_hData[1],landings_hData[2],landings_hData[3]);
         if (landingsStackCount == 0) {
             landingsPosData[landingsStackCount] = [0, landingHeight];
-            return Bodies.rectangle(x, y, 50, landingHeight, {
+            return Bodies.rectangle(x, y, landingsWidth, landingHeight, {
             isStatic: true,
             friction: 1,
             render: {
@@ -152,9 +272,9 @@ function createObjects(fuel_vals, landings_hData, landings_xData) {
         });
             }
             else{
-            let x_pos = x + randomBias(landings_xData[0],landings_xData[1],landings_xData[2],landings_xData[3]);
+            let x_pos = x + randomBias(landings_xData[0]+landingsWidth*0.5,landings_xData[1]+(landingsWidth*0.5),landings_xData[2],landings_xData[3]);
             landingsPosData[landingsStackCount] = [x_pos, landingHeight];
-            return Bodies.rectangle(x_pos, y, 50, landingHeight, {
+            return Bodies.rectangle(x_pos, y, landingsWidth, landingHeight, {
             isStatic: true,
             friction: 0.75,
             render: {
@@ -172,7 +292,7 @@ function createObjects(fuel_vals, landings_hData, landings_xData) {
     landingsSensors = Composites.stack(0, height*0.95, landingsAmount, 1, 100, 0, function(x, y) {
         landingsSensorsStackCount++;
         if (landingsStackCount == 0) {
-            return Bodies.rectangle(landingsPosData[landingsSensorsStackCount][0]+10, landingsPosData[landingsSensorsStackCount][1], 30, 10, {
+            return Bodies.rectangle(landingsPosData[landingsSensorsStackCount][0]+landingsWidth*0.35, landingsPosData[landingsSensorsStackCount][1], 30, 10, {
             isStatic: true,
             isSensor: true,
             friction: 1,
@@ -185,7 +305,7 @@ function createObjects(fuel_vals, landings_hData, landings_xData) {
             });
             }
             else{
-            return Bodies.rectangle(landingsPosData[landingsSensorsStackCount][0]+10, landingsPosData[landingsSensorsStackCount][1], 30, 10, {
+            return Bodies.rectangle(landingsPosData[landingsSensorsStackCount][0]+landingsWidth*0.37, landingsPosData[landingsSensorsStackCount][1], 30, 10, {
             isStatic: true,
             isSensor: true,
             friction: 0.75,
@@ -201,7 +321,7 @@ function createObjects(fuel_vals, landings_hData, landings_xData) {
     lastLoc = [ x_ini, y_ini + 5 ];
     nextLoc = [ x_ini + distPillar(0)[0], y_ini + distPillar(0)[1] ];
     lastScore = score;
-    lander = Bodies.rectangle(x_ini,y_ini,40,190, {
+    lander = Bodies.rectangle(x_ini+landingsWidth*0.3,y_ini,96,170.75, {
             collisionFilter: {
                 mask: defaultCategory
             },
@@ -211,14 +331,16 @@ function createObjects(fuel_vals, landings_hData, landings_xData) {
                 friction: 0.0,
                 lineWidth: 5,
                 sprite: {
-                        texture: 'media/game/rocket/rocket_cropped.png',
-                        xScale: 0.0757*1.125,
-                        yScale: 0.14
+                        texture: rocketTheme,
+                        //xScale: 0.0757*1.125,
+                        //yScale: 0.14
+                        xScale: .125 + rocketScaleCorrection,
+                        yScale: .125 + rocketScaleCorrection
                     }
             },
             density: .0000002
     });
-    ground = Bodies.rectangle(width*1,height*0.2,landingsPosData[15][0]+width*1.5,60, {
+    ground = Bodies.rectangle(width*2.5,height*0.65,landingsPosData[landingsAmount-1][0]+width*1.75+(landingsAmount*landingsWidth),60, {
             isStatic: true,
             friction: 0.75,
             collisionFilter: {
@@ -228,6 +350,16 @@ function createObjects(fuel_vals, landings_hData, landings_xData) {
                 fillStyle: 'grey'
             }
     });
+    ceiling = Bodies.rectangle(width*2.5,height*0.65,landingsPosData[landingsAmount-1][0]+width*1.75+(landingsAmount*landingsWidth),60, {
+        isStatic: true,
+        friction: 0.75,
+        collisionFilter: {
+            category: defaultCategory
+        },
+        render: {
+            fillStyle: 'grey'
+        }
+});
     background = Bodies.rectangle(x_ini,y_ini,width,height, {
         collisionFilter: {
             mask: background
@@ -237,9 +369,9 @@ function createObjects(fuel_vals, landings_hData, landings_xData) {
             strokeStyle: inactive,
             lineWidth: 5,
             sprite: {
-                texture: 'media/game/background/background169.jpg',
-                xScale: .5,
-                yScale: .5
+                texture: backgroundTheme,
+                xScale: .5 + bgScaleCorrection,
+                yScale: .5 + bgScaleCorrection
             }
         }
     });
@@ -247,7 +379,7 @@ function createObjects(fuel_vals, landings_hData, landings_xData) {
 }
 
 function addObjects() {
-    World.add(world, [ landings, landingsSensors, ground, background, lander ]);
+    World.add(world, [ landings, landingsSensors, ground, ceiling, background, lander ]);
 }
 
 
@@ -306,14 +438,13 @@ function distPillar(pillarLoc) {
     if (pillarLoc < 0) {return [0,0]}
     else if (pillarLoc >= landingsSensors.bodies.length-1) {return [0,0]}
     else{
-    let x_next = landingsPosData[pillarLoc+1][0] - landingsPosData[pillarLoc][0];
+    let x_next = (landingsPosData[pillarLoc+1][0] - landingsPosData[pillarLoc][0]) + landingsWidth*0.5;
     let y_next = landingsPosData[pillarLoc+1][1] - landingsPosData[pillarLoc][1];
     return [x_next, y_next];
     }
 }
 var timeScaleTarget = 1,
 timingCounter = 0;
-fuel = 10000;
 // Keykey verifier
 key_down = false;
 
@@ -323,7 +454,7 @@ Events.on(runner, 'afterUpdate', function(event) {
     }
 });
 
-// Fuel Management
+// Fuel Management & Level Coordinator
 Events.on(runner, 'afterUpdate', function(event) {
     if (key_down || active_pillar > -1) {
         // tween the timescale for bullet time slow-mo
@@ -333,7 +464,9 @@ Events.on(runner, 'afterUpdate', function(event) {
         if (key_down) {
             // every 1.5 sec
             if (timingCounter >= 60 * (1/12)) {
-                fuel = fuel - 1;
+                if (fuel > 0) {
+                    fuel = fuel - 1;
+                }
                 // reset counter
                 timingCounter = 0;
             }
@@ -346,16 +479,32 @@ Events.on(runner, 'afterUpdate', function(event) {
 });
 function addFuel(pillarLoc) {
     if (((Math.abs(lander.velocity.x) <= 0.1) & (Math.abs(lander.velocity.y) <= 0.1)) & landingsFuel[pillarLoc] > 0) {
-    fuel += landingsFuel[pillarLoc][0];
-    console.log('Adding ' + String(landingsFuel[pillarLoc][0]) + " to fuel")
-    landingsFuel[pillarLoc] = [ 0 ];
-    lastLoc = [ lander.position.x, lander.position.y ];
-    nextLoc = [ lastLoc[0] + distPillar(pillarLoc)[0], lastLoc[1] - distPillar(pillarLoc)[1] ];
-    console.log("Last pillar location: " + lastLoc);
-    score++;
-    lastScore = score;
-    console.log("Last score: " + lastScore);
+        fuel += landingsFuel[pillarLoc][0];
+        console.log('Adding ' + String(landingsFuel[pillarLoc][0]) + " to fuel")
+        landingsFuel[pillarLoc] = [ 0 ];
+        lastLoc = [ lander.position.x, lander.position.y, active_pillar ];
+        nextLoc = [ lastLoc[0] + distPillar(pillarLoc)[0], lastLoc[1] - distPillar(pillarLoc)[1] ];
+        console.log("Last pillar location: " + lastLoc);
+        score++;
+        lastScore = score;
+        console.log("Last score: " + lastScore);
+        launched = false;
+        if ( pillarLoc == (landingsAmount-1) ) {
+            currLevel++;
+            updateLevel(currLevel);
+        }
+    }
 }
+function updateLevel(lvl) {
+    if (lvl > levelsAmount) {
+        console.log("Game finished.")
+        characterAlert("Congratulations! You Won! You can choose different settings or a different rocket to play again.");
+    }
+    else {
+        console.log("Level upgraded to: " + lvl)
+        setGameState(settingsParams[98],settingsParams[1],settingsParams[2],settingsParams[3]);
+        setGameState(settingsParams[1],settingsParams[1],settingsParams[2],settingsParams[3]);
+    }
 }
 // Viewport follower
 var targetScale = 1.45;
@@ -367,8 +516,6 @@ var currentViewport = [renderBoundsXDiff, renderBoundsYDiff];
 var scaleProgress = 0;
 var adjustedViewport = 0;
 
-// chances are you will have to rewrite this in terms of render bounds, not render width/height
-// old curve: 1 / (1 + Math.exp(10(x-0.5)))
 function scaleCurve(x) {
     return ( 1 / (1 + Math.exp(18*(x-0.75))) );
 }
@@ -464,56 +611,73 @@ Events.on(runner, 'beforeTick', function() {
         // move the background in accordance with the viewport
 
         Body.setPosition(background,
-            {x: ( (landingsSensors.bodies[0].position.x)+(lander.position.x*0.9) ) + 600,
-             y: (landingsSensors.bodies[0].position.y*0.1)+(lander.position.y*0.9)})
+            {
+                x: ( (landingsSensors.bodies[0].position.x)+(lander.position.x*0.9) ) + 600,
+                y: (landingsSensors.bodies[0].position.y*0.1)+(lander.position.y*0.9) - height*0.15
+            })
         Render.bodyVelocity(render, lander, render.context);
 
     }
 });
-
+function teleportBack() {
+    Body.setPosition(lander,
+        {
+            x: landingsPosData[lastLoc[2]][0]+(landingsWidth*0.5),
+            y: lastLoc[1]
+        })
+    Body.setVelocity(lander,
+        {
+            x: 0,
+            y: 0
+        })
+}
 Events.on(runner, 'afterUpdate', function(event) {
     if ( (launched & ( (lander.position.y > 0 ) | (lander.position.x > nextLoc[0]*1.125) ) ) == 1 ) {
-        Body.setPosition(lander,
-            {
-                x: lastLoc[0],
-                y: lastLoc[1]
-            })
-        Body.setVelocity(lander,
-            {
-                x: 0,
-                y: 0
-            })
+        teleportBack();
         console.log("Launch failed. Reverting...")
         launched = false;
     }
+    if ( lander.position.y > 1000 ) { teleportBack(); }
+    if ( lander.position.y < -5000 ) { teleportBack(); }
+    if ( ( lander.position.x < landingsPosData[0][0]-200 ) | ( lander.position.x > landingsPosData[landingsAmount-1][0]+300 ) ) { teleportBack(); }
 });
 
 Events.on(runner, 'tick', function(event) {
-    if (keys[38]) { // UP
-        let F_APPLIED = (-1500 * lander.mass);
-        Body.applyForce(lander,lander.position,{x: 0, y: F_APPLIED});
-        //console.log('up pess' + F_APPLIED);
-        key_down = true;
+    if (fuel > 0) {
+        if (keys[38]) { // UP
+            let F_APPLIED = (-1500 * lander.mass);
+            Body.applyForce(lander,lander.position,{x: 0, y: F_APPLIED});
+            //console.log('up pess' + F_APPLIED);
+            key_down = true;
+        }
+        if (keys[40]) { // DOWN
+            let F_APPLIED = (1500 * lander.mass);
+            Body.applyForce(lander,lander.position,{x: 0, y: F_APPLIED});
+            //console.log('up pess' + F_APPLIED);
+            key_down = true;
+    
+        }
+        if (keys[39]) { // RIGHT
+            let F_APPLIED = (500 * lander.mass);
+            Body.applyForce(lander,{x: 0, y: lander.position.y},{x: F_APPLIED, y: 0});
+            //console.log('up pess' + F_APPLIED);
+            key_down = true;
+    
+        }
+        if (keys[37]) { // LEFT
+            let F_APPLIED = (-500 * lander.mass);
+            Body.applyForce(lander,{x: 0, y: lander.position.y},{x: F_APPLIED, y: 0});
+            //console.log('up pess' + F_APPLIED);
+            key_down = true;
+        }
     }
-    if (keys[40]) { // DOWN
-        let F_APPLIED = (1500 * lander.mass);
-        Body.applyForce(lander,lander.position,{x: 0, y: F_APPLIED});
-        //console.log('up pess' + F_APPLIED);
-        key_down = true;
-
+    
+    // Control thruster sound effect
+    if (key_down) {
+        updateVolume(0.6);
     }
-    if (keys[39]) { // RIGHT
-        let F_APPLIED = (500 * lander.mass);
-        Body.applyForce(lander,{x: 0, y: lander.position.y},{x: F_APPLIED, y: 0});
-        //console.log('up pess' + F_APPLIED);
-        key_down = true;
-
-    }
-    if (keys[37]) { // LEFT
-        let F_APPLIED = (-500 * lander.mass);
-        Body.applyForce(lander,{x: 0, y: lander.position.y},{x: F_APPLIED, y: 0});
-        //console.log('up pess' + F_APPLIED);
-        key_down = true;
+    else {
+        updateVolume(0.075);
     }
 
     //if ((lander.velocity.y > 0.15) & (lander.velocity.y > 0)) {}
@@ -521,11 +685,13 @@ Events.on(runner, 'tick', function(event) {
 
     // Update debug info:
 
-    document.getElementById("ploc").textContent = String(active_pillar) + "/" + String(landingsAmount-1);
+    if (active_pillar != -1) {
+        document.getElementById("ploc").textContent = String(active_pillar+1) + "/" + String(landingsAmount);
+    }
     document.getElementById("x_next_pillar").textContent = String(distPillar(active_pillar)[0].toFixed(2));
     document.getElementById("y_next_pillar").textContent = String(distPillar(active_pillar)[1].toFixed(2));
     document.getElementById("x_pos").textContent = String(lander.position.x.toFixed(2));
-    document.getElementById("y_pos").textContent = String(lander.position.y.toFixed(2));
+    document.getElementById("y_pos").textContent = String(-1*lander.position.y.toFixed(2));
     document.getElementById("fuel").textContent = String(fuel);
     document.getElementById("score").textContent = String(score);
 

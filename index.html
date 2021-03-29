@@ -6,24 +6,38 @@
         <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@1,800&display=swap" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Nunito&display=swap" rel="stylesheet">
         <title>
-            EF 152 Project Alpha
+            Blast Off!
         </title>
     </head>
     <body>
-        <div id="chooseRocket_mdl" class="modal">
+        <div id="chooseRocket_mdl" class="modal" style="top:15%;">
             <div class="modal-content">
               <div class="modal-header">
-                <h2>Select Your Rocket</h2>
+                <h2>Customize It!</h2>
               </div>
-              <div class="modal-body">
-                <p>Choose from one of the 4 themes.</p>
-                <p>list of buttons/dot list</p>
-                <code>In development</code>
-              </div>
-              <div class="modal-footer">
-                <button id="submitRocket" class="button" style="margin-right: 2%;">Choose Rocket</button>
-                <button id="close_btn_1" class="button">Cancel</button>
-              </div>
+                <div class="modal-body">
+                    <p><b><i>Select Your Rocket</i></b></p>
+                    <button id="t1_r" class="button">Blazin' Blue</button>
+                    <button id="t2_r" class="button">Rocket 2</button>
+                    <button id="t3_r" class="button">Rocket 3</button>
+                    <button id="t4_r" class="button">Rocket 4</button>
+                    <button id="t5_r" class="button">Rocket 5</button>
+                    <button id="t6_r" class="button">Rocket 6</button>
+                    <p></p>
+                    <img id="rocketPreviewImage" src="" style="width:9.75%;">
+                    <p><b><i>Choose The Background</i></b></p>
+                    <button id="t1_bg" class="button">Liberty</button>
+                    <button id="t2_bg" class="button">Alien World</button>
+                    <button id="t3_bg" class="button">Background 3</button>
+                    <button id="t4_bg" class="button">Background 4</button>
+                    <p></p>
+                    <img id="bgPreviewImage" src="" style="width:27.5%;">
+                    <p><i>Warning: Changing the theme will reset the game.</i></p>
+                </div>
+                <div class="modal-footer">
+                    <button id="submitRocket" class="button" style="margin-right: 2%;">Change Theme</button>
+                    <button id="close_btn_1" class="button">Cancel</button>
+                </div>
             </div>
         </div>
         <div id="settings_mdl" class="modal">
@@ -35,8 +49,9 @@
                 <b>Difficulty:</b> <input type="range" min="0" max="2" class="rangeInput" id="difficulty_input" value="1"> <span id="difficulty_disp">1</span> <br>
                 <b>Pillars Per Level:</b> <input type="range" min="12" max="24" class="rangeInput" id="totalPillar_input" value="18"> <span id="totalPillar_disp">18</span> <br>
                 <b>Number of Levels:</b> <input type="range" min="1" max="4" class="rangeInput" id="totalLevels_input" value="1"> <span id="totalLevels_disp">1</span> <br>
-                <b>Select Mode:</b> <button id="mode_normal" class="button">Normal</button> <button id="time_mode" class="button">Time Trials</button>
-                <p><b><i>Be sure to pick your rocket!</i></b></p>
+                <b>Select Mode:</b> <button id="mode_normal" class="button">Normal</button> <button id="time_mode" class="button">Time Trials</button> <br><br>
+                <b>Sound:</b> <button id="sound_option" class="button">Disable Sound</button>
+                <p><i>Warning: Changing the game settings will reset the game.</i></p>
                 <code>In development</code>
               </div>
               <div class="modal-footer">
@@ -65,11 +80,11 @@
                 <h2>Launch Mode</h2>
               </div>
               <div class="modal-body" style="background-color: rgba(0,0,0, 0.75);">
-                V<sub>0</sub> Vel: <input type="range" min="1" max="30" class="rangeInput" id="launchMode_vel_input" value="0"> <span id="launchMode_vel_disp">0</span> u/s <br>
+                V<sub>0</sub> Vel: <input type="range" min="1" max="30" class="rangeInput" id="launchMode_vel_input" value="10"> <span id="launchMode_vel_disp">0</span> u/s <br>
             &theta; from Horizontal: <input type="range" min="45" max="90" class="rangeInput" id="launchMode_vel_angle" value="45"> <span id="launchMode_ang_disp">0</span>&deg; <br>
             Graph Scale: <input type="range" min="10" max="175" class="rangeInput" id="graphZoom" value="100"> <span id="graphZoom_disp">100</span>% <br>
 
-                <canvas id="traplot" style="border:2px solid #f4d160;"></canvas>
+                <canvas id="traplot"></canvas>
               </div>
               <div class="modal-footer">
                 <button id="launchMode_btn" class="button" style="margin-right: 2%;"><b>Launch!</b></button>
@@ -78,12 +93,13 @@
             </div>
         </div>
         <div class="top-container">
-            <h1>Rooftop Rocket</h1>
+            <h1>Blast Off!</h1>
             <h3 class="links"><a href="how_to_play.html">How To Play</a></h3>
             <h3 class="links"><a href="trajectory_eq.html">Trajectory Equation</a></h3>
         </div>
         <div class="left-container">
             Score: <span id="score">0000</span> <br>
+            Level: <span id="level">0000</span> <br>
             Pillar Number: <span id="ploc">0000</span> <br>
             Fuel Remaining: <span id="fuel">0000</span> <br>
         </div>
@@ -100,23 +116,41 @@
             <button class="button" onclick="velInput()">Launch</button> <br>
         </div>
         <div class="settings-container">
-            <button id="chooseRocket_btn" class="button" style="margin-top: 16.5px;">Choose Rocket</button> <br>
+            <button id="chooseRocket_btn" class="button" style="margin-top: 16.5px;">Customize Game</button> <br>
             <button id="settings_btn" class="button" style="margin-top: 16.5px;">Settings</button>
             <button id="pause_btn" class="button" style="margin-top: 16.5px;">Pause Game</button>
         </div>
         <br><br>
         <div class="bottom-container">
-            <canvas id="cv" style="border:2px solid #f4d160;"></canvas><br><br>
+            <canvas id="cv"></canvas><br><br>
+
         </div>
+        <div id="character" class="character">
+            <img src="media/game/background/t3_bg.png">
+        </div>
+        <div id="characterSpeechModal" class="character-speech-bubble">
+            <p id="character-speech"></p> <br>
+            <button id="dismissCharacter" class="button">Okay</button>
+        </div>
+        <audio loop src="media/game/audio/Rocket Thrusters-SoundBible.com-1432176431.wav" type="audio/wav" style="display: none;"></audio>
         <code>In development</code>
         <script>
             var prohibitNewModal = true;
+            var rocketThemeIndex = 0;
+            var backgroundThemeIndex = 0;
+            var req_mode = 0;
+            var req_difficulty = 1;
+            var req_pillarNum = 16;
+            var req_lvls = 1;
             window.onload = function() {
                 startGame_mdl.classList.add('show');
                 startGame_btn.onclick = function() {
                     startGame_mdl.classList.remove('show');
                     console.log("Starting game with selected settings...")
-                    setGameState(0,1);
+                    setTheme(rocketThemeIndex,backgroundThemeIndex)
+                    setRocketPreviewTheme(rocketThemeIndex);
+                    setBackgroundPreviewTheme(backgroundThemeIndex);
+                    setGameState(req_mode,req_difficulty,req_pillarNum,req_lvls);
                     prohibitNewModal = false;
                 }
             }
@@ -126,28 +160,35 @@
             enableLaunchMode.onclick = function() {
                 if (!prohibitNewModal) {
                     launchMode_mdl.classList.add('show');
+                    pause_game();
                     prohibitNewModal = true;
-                    if (!paused) {
-                        pause();
-                        pauseButtonUpdate();
-                    }
                 }
             }
             launchMode_btn.onclick = function() {
                 launchMode_mdl.classList.remove('show');
+                pause_game();
                 prohibitNewModal = false;
-                if (paused) {
-                    pause();
-                    pauseButtonUpdate();
-                }
+
             }
             launchMode_close.onclick = function() {
                 launchMode_mdl.classList.remove('show');
+                pause_game();
                 prohibitNewModal = false;
-                if (paused) {
-                    pause();
-                    pauseButtonUpdate();
-                }
+            }
+        </script>
+        <script>
+            var characterModal = document.getElementById("character");
+            var characterSpeechModal = document.getElementById("characterSpeechModal");
+            var characterSpeech = document.getElementById("character-speech");
+            var dismissCharacter_Btn = document.getElementById("dismissCharacter")
+            function characterAlert(message) {
+                characterModal.classList.add('show');
+                characterSpeechModal.classList.add('show');
+                characterSpeech.innerText = message;
+            }
+            dismissCharacter_Btn.onclick = function() {
+                characterModal.classList.remove('show');
+                characterSpeechModal.classList.remove('show');
             }
         </script>
         <script>
@@ -166,47 +207,116 @@
                 if (!prohibitNewModal) {
                     chooseRocket_mdl.classList.add('show');
                     prohibitNewModal = true;
+                    if (!paused) {
+                        pause_game();
+                    }
                 }
             }
             settings_btn.onclick = function() {
                 if (!prohibitNewModal) {
+                    difficulty_range.value = req_difficulty;
+                    totalPillar_range.value = req_pillarNum;
+                    totalLvls_range.value = req_lvls;
+                    difficulty_disp.innerHTML = req_difficulty;
+                    pillarNum_disp.innerHTML = req_pillarNum;
+                    levelAmt_disp.innerHTML = req_lvls;
                     settings_mdl.classList.add('show');
                     prohibitNewModal = true;
+                    if (!paused) {
+                        pause_game();
+                    }
                 }
             }
             pause_btn.onclick = function() {
                 if (!prohibitNewModal) {
-                    pause();
-                    pauseButtonUpdate();
+                        pause_game();
                 }
             }
-            function pauseButtonUpdate() {
-                if (paused) {
-                    document.getElementById("pause_btn").innerHTML = "Resume Game";
-                }
-                else {
-                    document.getElementById("pause_btn").innerHTML = "Pause Game";
-                }
+            // Input user info for rocket selection before submitting to the game
+            var toggleSoundButton = document.getElementById("sound_option");
+            var proposedRocketThemeIndex = 0;
+            var proposedBackgroundThemeIndex = 0;
+            var rocketThemeInput = [
+                t1_r = document.getElementById("t1_r"),
+                t2_r = document.getElementById("t2_r"),
+                t3_r = document.getElementById("t3_r"),
+                t4_r = document.getElementById("t4_r"),
+                t5_r = document.getElementById("t5_r"),
+                t6_r = document.getElementById("t6_r"),
+            ]
+            var backgroundThemeInput = [
+                t1_bg = document.getElementById("t1_bg"),
+                t2_bg = document.getElementById("t2_bg"),
+                t3_bg = document.getElementById("t3_bg"),
+                t4_bg = document.getElementById("t4_bg"),
+            ]
+            var rocketThemePreviewImage = document.getElementById("rocketPreviewImage");
+            var bgThemePreviewImage = document.getElementById("bgPreviewImage");
+            rocketThemeInput[0].onclick = function() { setRocketPreviewTheme(0); }
+            rocketThemeInput[1].onclick = function() { setRocketPreviewTheme(1); }
+            rocketThemeInput[2].onclick = function() { setRocketPreviewTheme(2); }
+            rocketThemeInput[3].onclick = function() { setRocketPreviewTheme(3); }
+            rocketThemeInput[4].onclick = function() { setRocketPreviewTheme(4); }
+            rocketThemeInput[5].onclick = function() { setRocketPreviewTheme(5); }
+
+            backgroundThemeInput[0].onclick = function() { setBackgroundPreviewTheme(0); }
+            backgroundThemeInput[1].onclick = function() { setBackgroundPreviewTheme(1); }
+            backgroundThemeInput[2].onclick = function() { setBackgroundPreviewTheme(2); }
+            backgroundThemeInput[3].onclick = function() { setBackgroundPreviewTheme(3); }
+            function setRocketPreviewTheme(rocketTheme_previewIndex) {
+                proposedRocketThemeIndex = rocketTheme_previewIndex;
+                rocketThemePreviewImage.src = "media/game/rocket/" + themes[rocketTheme_previewIndex][0];
+            }
+            function setBackgroundPreviewTheme(bgTheme_previewIndex) {
+                proposedBackgroundThemeIndex = bgTheme_previewIndex;
+                bgThemePreviewImage.src = "media/game/background/" + themes[proposedBackgroundThemeIndex][1];
             }
 
             // Close the modal based on the following conditions
             close_btn_1.onclick = function() {
                 chooseRocket_mdl.classList.remove('show');
                 prohibitNewModal = false;
+                if (paused) {
+                    pause_game();
+                }
             }
             close_btn_2.onclick = function() {
                 settings_mdl.classList.remove('show');
                 prohibitNewModal = false;
+                if (paused) {
+                    pause_game();
+                }
             }
-
+            toggleSoundButton.onclick = function() {
+                if (enableSound) {
+                    setSoundState(false);
+                    toggleSoundButton.innerHTML = "Enable Sound";
+                }
+                else {
+                    setSoundState(true);
+                    toggleSoundButton.innerHTML = "Disable Sound";
+                }
+            }
             submitRocket.onclick = function() {
                 chooseRocket_mdl.classList.remove('show');
                 prohibitNewModal = false;
-                console.log("Rocket model chosen. Resetting to previous game state.")
+                rocketThemeIndex = proposedRocketThemeIndex;
+                backgroundThemeIndex = proposedBackgroundThemeIndex;
+                setTheme(rocketThemeIndex, backgroundThemeIndex);
+                console.log("Theme chosen. Resetting to previous game state.")
+                setGameState(99);
+                setGameState(req_mode,req_difficulty,req_pillarNum,req_lvls);
+                pauseButtonUpdate();
             }
             submitSettings.onclick = function() {
                 settings_mdl.classList.remove('show');
                 prohibitNewModal = false;
+                req_mode = 0;
+                req_difficulty = parseInt(difficulty_disp.innerHTML);
+                req_pillarNum = parseInt(pillarNum_disp.innerHTML);
+                req_lvls = parseInt(levelAmt_disp.innerHTML);
+                setGameState(99);
+                setGameState(req_mode,req_difficulty,req_pillarNum,req_lvls);
                 console.log("Game settings changed. Resetting game state.")
             }
 
@@ -216,6 +326,26 @@
                     chooseRocket_mdl.classList.remove('show');
                     settings_mdl.classList.remove('show');
                     prohibitNewModal = false;
+                }
+            }
+        </script>
+        <script>
+            function pauseButtonUpdate() {
+                if (paused) {
+                    document.getElementById("pause_btn").innerHTML = "Resume Game";
+                }
+                else {
+                    document.getElementById("pause_btn").innerHTML = "Pause Game";
+                }
+            }
+            function pause_game() {
+                if (!paused) {
+                    pause();
+                    pauseButtonUpdate();
+                }
+                else if (paused) {
+                    pause();
+                    pauseButtonUpdate();
                 }
             }
         </script>
