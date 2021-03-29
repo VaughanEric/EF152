@@ -174,7 +174,7 @@ a:hover {
 .modal-body {
     padding: 2px 16px;
     color: white;
-    background-color: rgba(0,0,0, 0.45); /* Black w/opacity/see-through */
+    background-color: rgba(0,0,0, 0.65); /* Black w/opacity/see-through */
     border-left-style: solid;
     border-left-width: thin;
     border-left-color: black;
