@@ -125,37 +125,40 @@ a:hover {
 }
 /* Character */
 .character {
-    position: fixed;
-    z-index: 0;
-    overflow: auto;
-    left: 22.5%;
+    position: absolute;
     transition: all 0.32s ease-in-out;
     opacity: 0;
     transform: scale(.2);
+    right: -100%;
 }
 .character.show {
-    z-index: 4;
-    margin-top: -45%;
+    margin-top: -35%;
     opacity: 1;
+    left: -14%;
 }
 .character-speech-bubble {
-    z-index:6;
-    position: fixed;
-    overflow: auto;
+    position: absolute;
     width: 15%;
     background-color: #ddf3f5;
     box-shadow: 5px 10px #f4d160;
     padding: 10px;
     border-radius: 10px 10px 0px 10px;
-    margin-top: 40%;
     opacity: 0;
-    margin-left: 54%;
     transition: all 0.42s ease-in-out;
+    right: -100%;
 }
 .character-speech-bubble.show {
     opacity: 1;
-    margin-top: -30%;
-    left: 27.5%;
+    margin-top: -17.5%;
+    right: -2.5%;
+}
+
+.victory-message {
+    position: fixed;
+    right: 50px;
+    top: 500px;
+    height: 1000px;
+    width: 1000px;
 }
 
 /* Modal (settings selection window) */
