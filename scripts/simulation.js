@@ -2,6 +2,7 @@
 // For the EF 152 Project, Spring of 2021
 
 // Initialization
+console.log("Rooftop Rocket by Dean Forrest")
 var score = 0;
 var defaultCategory = 0x0001,
     background = 0x0002,
@@ -98,7 +99,7 @@ var render = Render.create({
         height: height,
         wireframes: false,
         showAngleIndicator: false,
-        showCollisions: true,
+        showCollisions: false,
         //showVelocity: false,
         hasBounds: true,
         background: 'transparent'
@@ -127,8 +128,8 @@ var mediaPath = "media/game/";
 var themes = [
     ["t1_r.png", "t1_bg.jpg"],
     ["t2_r.png", "t2_bg.png"],
-    ["t3_r.png", "t3_bg.png"],
-    ["t4_r.png", "t4_bg.png"],
+    ["t3_r.png", "t3_bg.jpg"],
+    ["t4_r.png", "t4_bg.jpg"],
     ["t5_r.png", ""],
     ["t6_r.png", ""]
 ];
@@ -154,23 +155,23 @@ function setGameState(state, difficulty, pillarAmt, lvlsAmt) {
     background = 0;
     World.clear(world);
     Engine.clear(engine);
-    switch(difficulty) {
+    switch(difficulty) { // leave minimum height value above 400 to prevent launch teleportion code from malfunctioning
         case 0:
             randFuelLimit = [5, 20, 18, 0.95];
-            randLandings_hLimits = [20, 40, 30, 0.75];
-            randLandings_xPosLimits = [25, 50, 35, 0.75];
-            fuel = 100;
+            randLandings_hLimits = [400, 650, 500, 0.8];
+            randLandings_xPosLimits = [100, 200, 125, 0.75];
+            fuel = 50;
             break;
         case 1:
             randFuelLimit = [5, 20, 10, 0.95];
-            randLandings_hLimits = [300, 650, 400, 0.75];
+            randLandings_hLimits = [400, 650, 500, 0.75];
             randLandings_xPosLimits = [200, 300, 275, 0.75];
             fuel = 50;
             break;
         case 2:
             randFuelLimit = [5, 20, 10, 0.95];
-            randLandings_hLimits = [200, 1200, 950, 0.75];
-            randLandings_xPosLimits = [125, 600, 500, 0.75];
+            randLandings_hLimits = [400, 800, 700, 0.75];
+            randLandings_xPosLimits = [400, 600, 500, 0.75];
             fuel = 35;
             break;
     }
@@ -340,7 +341,7 @@ function createObjects(fuel_vals, landings_hData, landings_xData) {
             },
             density: .0000002
     });
-    ground = Bodies.rectangle(width*2.5,height*0.65,landingsPosData[landingsAmount-1][0]+width*1.75+(landingsAmount*landingsWidth),60, {
+    ground = Bodies.rectangle(width*2.5,height*0.55,landingsPosData[landingsAmount-1][0]+width*1.75+(landingsAmount*landingsWidth),60, {
             isStatic: true,
             friction: 0.75,
             collisionFilter: {
@@ -388,16 +389,22 @@ var launched = false;
 function velInput() {
     var input_vel = document.getElementById("input_vel").value;
     var vel_angle = document.getElementById("vel_angle").value;
-    Body.setVelocity(lander, {x: (input_vel*Math.cos(vel_angle*(Math.PI/180))), y: -(input_vel*Math.sin(vel_angle*(Math.PI/180)))})
-    launched = true;
-    console.log('Launched set to true');
+    if ( (fuel - fuel*0.05) > 0 ) {
+        fuel = fuel - Math.ceil(fuel*0.05);
+        Body.setVelocity(lander, {x: (input_vel*Math.cos(vel_angle*(Math.PI/180))), y: -(input_vel*Math.sin(vel_angle*(Math.PI/180)))})
+        launched = true;
+        console.log('Launched set to true');
+    }
 }
 function launchMode_velInput() {
     var input_vel = document.getElementById("launchMode_vel_input").value;
     var vel_angle = document.getElementById("launchMode_vel_angle").value;
-    Body.setVelocity(lander, {x: (input_vel*Math.cos(vel_angle*(Math.PI/180))), y: -(input_vel*Math.sin(vel_angle*(Math.PI/180)))})
-    launched = true;
-    console.log('Launched set to true');
+    if ( (fuel - fuel*0.05) > 0 ) {
+        fuel = fuel - Math.ceil(fuel*0.05);
+        Body.setVelocity(lander, {x: (input_vel*Math.cos(vel_angle*(Math.PI/180))), y: -(input_vel*Math.sin(vel_angle*(Math.PI/180)))})
+        launched = true;
+        console.log('Launched set to true');
+    }
 }
 // Sensor manager
 Events.on(engine, 'collisionStart', function(event) {
@@ -475,6 +482,11 @@ Events.on(runner, 'afterUpdate', function(event) {
             addFuel(active_pillar);
         }
     }
+    if ((fuel <= 0) & ( (lander.position.y > 0) || (Math.abs(lander.velocity.y) <= 0.05) )) {
+        characterAlert("Game over! You're all out of fuel! Click \"Okay\" to restart.");
+        pause();
+        pauseButtonUpdate();
+    }
     //key_down = false;
 });
 function addFuel(pillarLoc) {
@@ -490,7 +502,7 @@ function addFuel(pillarLoc) {
         console.log("Last score: " + lastScore);
         launched = false;
         if ( pillarLoc == (landingsAmount-1) ) {
-            currLevel++;
+            currLevel = currLevel + 1;
             updateLevel(currLevel);
         }
     }
@@ -499,11 +511,15 @@ function updateLevel(lvl) {
     if (lvl > levelsAmount) {
         console.log("Game finished.")
         characterAlert("Congratulations! You Won! You can choose different settings or a different rocket to play again.");
+        pause();
+        pauseButtonUpdate();
     }
     else {
+        document.getElementById("level").textContent = String(currLevel) + "/" + String(levelsAmount);
         console.log("Level upgraded to: " + lvl)
-        setGameState(settingsParams[98],settingsParams[1],settingsParams[2],settingsParams[3]);
-        setGameState(settingsParams[1],settingsParams[1],settingsParams[2],settingsParams[3]);
+        characterAlert("Awesome work! You're on level " + lvl + " of " + levelsAmount + "!");
+        setGameState(98,settingsParams[1],settingsParams[2],settingsParams[3]);
+        setGameState(1,settingsParams[1],settingsParams[2],settingsParams[3]);
     }
 }
 // Viewport follower
@@ -552,15 +568,21 @@ Events.on(runner, 'beforeTick', function() {
     renderBoundsYDiff = (Math.abs(render.bounds.max.y - render.bounds.min.y));
     currentViewport = [renderBoundsXDiff, renderBoundsYDiff];
 
-    if (active_pillar != -1 && (!isViewportScaled(currentViewport, [defaultViewport[0]*targetScale, defaultViewport[1]*targetScale]))) {
-        //let scaleDelta = (Math.abs(defaultViewport[0]-currentViewport[0])) / (Math.abs(defaultViewport[0]-(defaultViewport[0]*targetScale)));
+    if ((launched | active_pillar != -1) && (!isViewportScaled(currentViewport, [defaultViewport[0]*targetScale, defaultViewport[1]*targetScale]))) {
+        //let scaleDelta= (Math.abs(defaultViewport[0]-currentViewport[0])) / (Math.abs(defaultViewport[0]-(defaultViewport[0]*targetScale)));
+        if (launched) {
+            targetScale = 2;
+        }
+        else {
+            targetScale = 1.45;
+        }
         let scaleDelta =  ((Math.abs(currentViewport[0]-width)  / Math.abs(defaultViewport[0]*targetScale-width)));
         //console.log("scale delta: " + scaleDelta);
         scaleViewport(0.00175*scaleCurve(scaleDelta), true); // 0.01 for fast, 0.0019 for smooth and slow
         //console.log(renderBoundsXDiff + "  " + renderBoundsYDiff);
         //console.log("scale delta: " + scaleDelta);
     }
-    if ((!isViewportScaled(currentViewport, defaultViewport)) && active_pillar == -1) {
+    if ((!isViewportScaled(currentViewport, defaultViewport)) && (active_pillar == -1)) {
         let scaleDelta =  1 - ((Math.abs(defaultViewport[0])  / Math.abs(currentViewport[0])));
         scaleViewport(0.001*scaleCurve(scaleDelta), false);
         //console.log("scale delta: " + scaleCurve(scaleDelta));
@@ -632,7 +654,7 @@ function teleportBack() {
         })
 }
 Events.on(runner, 'afterUpdate', function(event) {
-    if ( (launched & ( (lander.position.y > 0 ) | (lander.position.x > nextLoc[0]*1.125) ) ) == 1 ) {
+    if ( (launched & ( (lander.position.y > 0 )  ) ) == 1 ) {
         teleportBack();
         console.log("Launch failed. Reverting...")
         launched = false;
@@ -684,14 +706,14 @@ Events.on(runner, 'tick', function(event) {
     Body.setAngle(lander,0); // lock rotation of the lander
 
     // Update debug info:
-
+    let reverse_yPos = lander.position.y * -1;
     if (active_pillar != -1) {
         document.getElementById("ploc").textContent = String(active_pillar+1) + "/" + String(landingsAmount);
     }
     document.getElementById("x_next_pillar").textContent = String(distPillar(active_pillar)[0].toFixed(2));
     document.getElementById("y_next_pillar").textContent = String(distPillar(active_pillar)[1].toFixed(2));
     document.getElementById("x_pos").textContent = String(lander.position.x.toFixed(2));
-    document.getElementById("y_pos").textContent = String(-1*lander.position.y.toFixed(2));
+    document.getElementById("y_pos").textContent = String(reverse_yPos.toFixed(2));
     document.getElementById("fuel").textContent = String(fuel);
     document.getElementById("score").textContent = String(score);
 

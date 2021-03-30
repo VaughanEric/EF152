@@ -127,38 +127,38 @@ a:hover {
 .character {
     position: absolute;
     transition: all 0.32s ease-in-out;
-    opacity: 0;
     transform: scale(.2);
-    right: -100%;
-}
-.character.show {
-    margin-top: -35%;
-    opacity: 1;
-    left: -14%;
+    margin-top: -37.25%;
+    left: -2.5%;
 }
 .character-speech-bubble {
     position: absolute;
-    width: 15%;
     background-color: #ddf3f5;
     box-shadow: 5px 10px #f4d160;
     padding: 10px;
     border-radius: 10px 10px 0px 10px;
-    opacity: 0;
-    transition: all 0.42s ease-in-out;
-    right: -100%;
-}
-.character-speech-bubble.show {
-    opacity: 1;
-    margin-top: -17.5%;
-    right: -2.5%;
+    margin-top: -7.85%;
+    right: 11.5%;
+    overflow-wrap: break-word;
+    inline-size: 20vw;
+    font-family: 'Nunito', sans-serif;
 }
 
-.victory-message {
+.character-container {
     position: fixed;
+    opacity: 0;
+    right: 0px;
+    top: 0px;
+    height: 0px;
+    width: 0px;
+    transition: all 0.34s ease-in-out;
+}
+.character-container.show {
     right: 50px;
-    top: 500px;
+    top: 75vh;
     height: 1000px;
     width: 1000px;
+    opacity: 1;
 }
 
 /* Modal (settings selection window) */

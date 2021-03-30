@@ -28,8 +28,8 @@
                     <p><b><i>Choose The Background</i></b></p>
                     <button id="t1_bg" class="button">Lady Liberty</button>
                     <button id="t2_bg" class="button">Alien Planet</button>
-                    <button id="t3_bg" class="button">Sunny Meadows</button>
-                    <button id="t4_bg" class="button">City Avenue</button>
+                    <button id="t3_bg" class="button">City Skyline</button>
+                    <button id="t4_bg" class="button">Sunny Meadows</button>
                     <p></p>
                     <img id="bgPreviewImage" src="" style="width:17.5%;">
                     <p><i>Warning: Changing the theme will reset the game.</i></p>
@@ -49,10 +49,8 @@
                 <b>Difficulty:</b> <input type="range" min="0" max="2" class="rangeInput" id="difficulty_input" value="1"> <span id="difficulty_disp">1</span> <br>
                 <b>Pillars Per Level:</b> <input type="range" min="12" max="24" class="rangeInput" id="totalPillar_input" value="18"> <span id="totalPillar_disp">18</span> <br>
                 <b>Number of Levels:</b> <input type="range" min="1" max="4" class="rangeInput" id="totalLevels_input" value="1"> <span id="totalLevels_disp">1</span> <br>
-                <b>Select Mode:</b> <button id="mode_normal" class="button">Normal</button> <button id="time_mode" class="button">Time Trials</button> <br><br>
                 <b>Sound:</b> <button id="sound_option" class="button">Disable Sound</button>
                 <p><i>Warning: Changing the game settings will reset the game.</i></p>
-                <code>In development</code>
               </div>
               <div class="modal-footer">
                 <button id="submitSettings" class="button" style="margin-right: 2%;">Change Settings</button>
@@ -100,17 +98,17 @@
         <div class="left-container">
             Score: <span id="score">0000</span> <br>
             Level: <span id="level">0000</span> <br>
-            Pillar Number: <span id="ploc">0000</span> <br>
+            Pillar Location: <span id="ploc">0000</span> <br>
             Fuel Remaining: <span id="fuel">0000</span> <br>
         </div>
         <div class="middle-container">
-            X Pos: <span id="x_pos">X</span> <br>
-            Y Pos: <span id="y_pos">Y</span> <br>
+            X Position: <span id="x_pos">X</span> <br>
+            Y Position: <span id="y_pos">Y</span> <br>
             X Dist to Next Pillar: <span id="x_next_pillar">X</span> <br>
             Y Dist to Next Pillar: <span id="y_next_pillar">Y</span> <br>
         </div>
         <div class="right-container">
-            V<sub>0</sub> Vel: <input type="range" min="1" max="50" class="rangeInput" id="input_vel" value="0"> <span id="vel_disp">0</span> u/s <br>
+            V<sub>0</sub> Vel: <input type="range" min="1" max="50" class="rangeInput" id="input_vel" value="10"> <span id="vel_disp">0</span> u/s <br>
             &theta; from Horizontal: <input type="range" min="0" max="90" class="rangeInput" id="vel_angle" value="45"> <span id="ang_disp">0</span>&deg; <br>
             <button id="enableLaunchMode" class="button">Enable Launch Mode</button>
             <button class="button" onclick="velInput()">Launch</button> <br>
@@ -125,7 +123,7 @@
             <canvas id="cv"></canvas><br><br>
 
         </div>
-        <div class="victory-message">
+        <div id="character-message" class="character-container">
             <div id="character" class="character">
                 <img src="images/Alien2.png" alt="Alien" style="border: none;">
             </div>
@@ -135,7 +133,6 @@
             </div>
         </div>
         <audio loop src="media/game/audio/Rocket Thrusters-SoundBible.com-1432176431.wav" type="audio/wav" style="display: none;"></audio>
-        <code>In development</code>
         <script>
             var prohibitNewModal = true;
             var rocketThemeIndex = 0;
@@ -179,10 +176,12 @@
             }
         </script>
         <script>
+            /*
             var characterModal = document.getElementById("character");
             var characterSpeechModal = document.getElementById("characterSpeechModal");
             var characterSpeech = document.getElementById("character-speech");
             var dismissCharacter_Btn = document.getElementById("dismissCharacter")
+            
             function characterAlert(message) {
                 characterModal.classList.add('show');
                 characterSpeechModal.classList.add('show');
@@ -191,6 +190,24 @@
             dismissCharacter_Btn.onclick = function() {
                 characterModal.classList.remove('show');
                 characterSpeechModal.classList.remove('show');
+            }
+            */
+           var characterContainer = document.getElementById("character-message");
+           var characterSpeech = document.getElementById("character-speech");
+            var dismissCharacter_Btn = document.getElementById("dismissCharacter")
+           function characterAlert(message) {
+               prohibitNewModal = true;
+                characterContainer.classList.add('show');
+                characterSpeech.innerText = message;
+            }
+            dismissCharacter_Btn.onclick = function() {
+                characterContainer.classList.remove('show');
+                if (fuel == 0) {
+                    setGameState(99);
+                    setGameState(req_mode,req_difficulty,req_pillarNum,req_lvls);
+                    pauseButtonUpdate();
+                }
+                prohibitNewModal = false;
             }
         </script>
         <script>

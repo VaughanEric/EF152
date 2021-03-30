@@ -12,6 +12,9 @@ var graphCanvas,
     launchMode_vel_disp,
     launchMode_ang_disp;
 
+var totalScale = 1;
+var plotScale = 0; // scale correction to try and match the game viewport scale
+
 enableLaunchMode.onclick = function() {
     if (!prohibitNewModal) {
         launchMode_mdl.classList.add('show');
@@ -20,6 +23,16 @@ enableLaunchMode.onclick = function() {
             pause();
             pauseButtonUpdate();
             traplotVarAssign();
+            switch (settingsParams[1]) {
+                case (0):
+                    plotScale = 35;
+                    break;
+                case 1:
+                    plotScale = 30;
+                    break;
+                case 2:
+                    plotScale = 18;
+            }
             setupTraplot();
             plot(launchMode_vel_range.value,launchMode_ang_range.value);
         }
@@ -58,8 +71,7 @@ function traplotVarAssign() {
     graphZoom_disp.innerHTML = graphZoom.value;
     traplotCTX.font = "12px Arial";
 }
-var totalScale = 1;
-var plotScale = 30; // scale correction to try and match the game viewport scale
+
 document.getElementById("launchMode_vel_input").oninput = function() {
     launchMode_vel_disp.innerHTML = this.value;
     ctxClear();
